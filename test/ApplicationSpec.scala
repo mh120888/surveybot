@@ -1,34 +1,38 @@
 import org.specs2.mutable._
 import org.specs2.runner._
 import org.junit.runner._
-
+import play.api.libs.json.Json
 import play.api.test._
 import play.api.test.Helpers._
 
-/**
- * Add your spec here.
- * You can mock out a whole application including requests, plugins etc.
- * For more information, consult the wiki.
- */
 @RunWith(classOf[JUnitRunner])
 class ApplicationSpec extends Specification {
 
   "Application" should {
 
-    "send 200 on a GET /hello" in new WithApplication{
-      route(FakeRequest(GET, "/hello")) must beSome.which (status(_) == OK)
+    "POST /survey with correct token and text returns a response of 200 and success message" in new WithApplication{
+      val result = route(FakeRequest(POST, "/survey")
+          .withJsonBody(Json.parse(
+          """ {
+            |"token": "ABCDEFG",
+            | "text": "story: 1, total: 5, add: 3, remove: 2"
+            | }"""
+            .stripMargin))).get
+
+      status(result) must equalTo(OK)
+      contentAsString(result) must contain ("Success!")
     }
 
-    "send 404 on a bad request" in new WithApplication{
-      route(FakeRequest(GET, "/boum")) must beSome.which (status(_) == NOT_FOUND)
-    }
+    "POST /survey with correct token and no text returns a response of 200 and error message" in new WithApplication{
+      val result = route(FakeRequest(POST, "/survey")
+          .withJsonBody(Json.parse(
+            """{
+              |"token": "ABCDEFG"
+              |}"""
+              .stripMargin))).get
 
-    "render the index page" in new WithApplication{
-      val home = route(FakeRequest(GET, "/")).get
-
-      status(home) must equalTo(OK)
-      contentType(home) must beSome.which(_ == "text/html")
-      contentAsString(home) must contain ("Your new application is ready.")
+      status(result) must equalTo(OK)
+      contentAsString(result) must contain ("Your submission is wrong.")
     }
   }
 }

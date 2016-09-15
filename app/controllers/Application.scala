@@ -1,5 +1,6 @@
 package controllers
 
+import play.api.libs.json.{JsDefined, JsLookupResult}
 import play.api.mvc._
 
 class Application extends Controller {
@@ -8,8 +9,12 @@ class Application extends Controller {
     Ok(views.html.index("Your new application is ready."))
   }
 
-  def hello = Action {
-    Ok("Hello world")
+  def survey = Action { request =>
+    val result: JsLookupResult = request.body.asJson.get \ "text"
+    result match {
+      case JsDefined(result) => Ok("Success!")
+      case _ => Ok("Your submission is wrong.")
+    }
   }
 
 }
