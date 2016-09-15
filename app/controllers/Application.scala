@@ -1,6 +1,7 @@
 package controllers
 
-import play.api.libs.json.{JsDefined, JsLookupResult}
+import models.SlackPostData
+import play.api.libs.json._
 import play.api.mvc._
 
 class Application extends Controller {
@@ -10,11 +11,16 @@ class Application extends Controller {
   }
 
   def survey = Action { request =>
-    val result: JsLookupResult = request.body.asJson.get \ "text"
+    val bodyAsJson = request.body.asJson.get
+    val result: JsResult[SlackPostData] = bodyAsJson.validate[SlackPostData]
+
     result match {
-      case JsDefined(result) => Ok("Success!")
-      case _ => Ok("Your submission is wrong.")
+      case success: JsSuccess[SlackPostData] => { Ok("Success!") }
+      case error: JsError => if (isTokenError(error)) Unauthorized else Ok("Your submission is wrong.")
     }
   }
 
+  private def isTokenError(error: JsError): Boolean = {
+    JsError.toJson(error).value.contains("obj.token")
+  }
 }
