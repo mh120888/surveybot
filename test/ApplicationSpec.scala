@@ -27,12 +27,12 @@ class ApplicationSpec extends Specification {
     }
 
     "POST /survey with correct token and no text returns a response of 200 and error message" in new WithApplication{
-      SlackPostData.setTestSlackToken("ABCDEFG")
+      SlackPostData.setTestSlackToken("xjdk333")
 
       val result = route(FakeRequest(POST, "/survey")
           .withJsonBody(Json.parse(
             """{
-              |"token": "ABCDEFG"
+              |"token": "xjdk333"
               |}"""
               .stripMargin))).get
 

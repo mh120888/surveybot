@@ -16,8 +16,8 @@ object SlackPostData {
     testSlackToken = token
   }
 
-  def getSlackToken: String = {
-    if (play.Play.isTest()) testSlackToken else SLACK_TOKEN
+  private def getSlackToken: String = {
+    if (play.Play.isTest) testSlackToken else SLACK_TOKEN
   }
 
   val correctToken: Reads[String] =
