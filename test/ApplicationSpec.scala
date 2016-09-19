@@ -14,13 +14,7 @@ class ApplicationSpec extends Specification {
     "POST /survey with correct token and text returns a response of 200 and success message" in new WithApplication{
       SlackPostData.setTestSlackToken("ABCDEFG")
 
-      val result = route(FakeRequest(POST, "/survey")
-          .withJsonBody(Json.parse(
-          """ {
-            |"token": "ABCDEFG",
-            | "text": "story: 1, total: 5, add: 3, remove: 2"
-            | }"""
-            .stripMargin))).get
+      val result = route(FakeRequest(POST, "/survey").withFormUrlEncodedBody(("token", "ABCDEFG"), ("text", "story: 1, total: 5, add: 3, remove: 2"))).get
 
       status(result) must equalTo(OK)
       contentAsString(result) must contain ("Success!")
@@ -29,12 +23,7 @@ class ApplicationSpec extends Specification {
     "POST /survey with correct token and no text returns a response of 200 and error message" in new WithApplication{
       SlackPostData.setTestSlackToken("xjdk333")
 
-      val result = route(FakeRequest(POST, "/survey")
-          .withJsonBody(Json.parse(
-            """{
-              |"token": "xjdk333"
-              |}"""
-              .stripMargin))).get
+      val result = route(FakeRequest(POST, "/survey").withFormUrlEncodedBody(("token", "xjdk333"))).get
 
       status(result) must equalTo(OK)
       contentAsString(result) must contain ("Your submission is wrong.")
@@ -43,11 +32,7 @@ class ApplicationSpec extends Specification {
     "POST /survey with incorrect token returns a response of 401" in new WithApplication{
       SlackPostData.setTestSlackToken("ABCDEFG")
 
-      val result = route(FakeRequest(POST, "/survey")
-        .withJsonBody(Json.parse(
-          """{
-            |"token": "HIJKLMN"
-            |}""".stripMargin))).get
+      val result = route(FakeRequest(POST, "/survey").withFormUrlEncodedBody(("token", "HIJKLMN"))).get
 
       status(result) must equalTo(UNAUTHORIZED)
     }

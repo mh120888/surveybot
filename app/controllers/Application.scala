@@ -11,7 +11,7 @@ class Application extends Controller {
   }
 
   def survey = Action { request =>
-    val bodyAsJson = request.body.asJson.get
+    val bodyAsJson = Json.toJson(request.body.asFormUrlEncoded.get)
     val result: JsResult[SlackPostData] = bodyAsJson.validate[SlackPostData]
 
     result match {
@@ -21,6 +21,6 @@ class Application extends Controller {
   }
 
   private def isTokenError(error: JsError): Boolean = {
-    JsError.toJson(error).value.contains("obj.token")
+    JsError.toJson(error).value.contains("obj.token[0]")
   }
 }

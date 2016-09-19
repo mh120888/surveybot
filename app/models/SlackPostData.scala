@@ -24,7 +24,7 @@ object SlackPostData {
     Reads.StringReads.filter(ValidationError("Invalid token"))(str => { str.equals(getSlackToken) } )
 
   implicit val reads: Reads[SlackPostData] = (
-    (JsPath \ "token").read[String](correctToken) and
-    (JsPath \ "text").read[String]
+    (JsPath \ "token")(0).read[String](correctToken) and
+    (JsPath \ "text")(0).read[String]
   )(SlackPostData.apply _)
 }
