@@ -20,10 +20,10 @@ object SlackPostData {
     if (play.Play.isTest) testSlackToken else SLACK_TOKEN
   }
 
-  val correctToken: Reads[String] =
+  def correctToken: Reads[String] =
     Reads.StringReads.filter(ValidationError("Invalid token"))(str => { str.equals(getSlackToken) } )
 
-  implicit val reads: Reads[SlackPostData] = (
+  implicit def reads: Reads[SlackPostData] = (
     (JsPath \ "token")(0).read[String](correctToken) and
     (JsPath \ "text")(0).read[String]
   )(SlackPostData.apply _)
