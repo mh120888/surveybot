@@ -8,14 +8,16 @@ import play.api.libs.json.{JsError, JsSuccess, Json}
 import play.api.test.WithApplication
 
 @RunWith(classOf[JUnitRunner])
-class SlackPostDataSpec extends Specification with BeforeEach {
+class SlackPostDataSpec extends Specification {
 
-  def before = {
-    SlackPostData.setTestSlackToken("hi")
-  }
+//  def before = {
+//    SlackPostData.setTestSlackToken("hi")
+//  }
 
   "SlackPostData" should {
     "#reads returns a JsSuccess if given a valid token and valid text" in new WithApplication{
+      SlackPostData.setTestSlackToken("hi")
+
       val validJson = Json.parse("""{"token":["hi"], "text": ["something"]}""")
       val result = SlackPostData.reads.reads(validJson)
 
@@ -23,6 +25,8 @@ class SlackPostDataSpec extends Specification with BeforeEach {
     }
 
     "#reads returns a JsError if given an invalid token" in new WithApplication{
+      SlackPostData.setTestSlackToken("hi")
+
       val jsonWithInvalidToken = Json.parse("""{"token":["invalid token"], "text": ["something"]}""")
       val result = SlackPostData.reads.reads(jsonWithInvalidToken)
 
@@ -31,6 +35,8 @@ class SlackPostDataSpec extends Specification with BeforeEach {
     }
 
     "#reads returns a JsError if given a valid token and no text" in new WithApplication{
+      SlackPostData.setTestSlackToken("hi")
+
       val jsonWithNoText = Json.parse("""{"token":["hi"]}""")
       val result = SlackPostData.reads.reads(jsonWithNoText)
 
@@ -39,6 +45,8 @@ class SlackPostDataSpec extends Specification with BeforeEach {
     }
 
     "#reads returns a JsError if given no token and valid text" in new WithApplication{
+      SlackPostData.setTestSlackToken("hi")
+
       val jsonWithNoToken = Json.parse("""{"text": ["something"]}""")
       val result = SlackPostData.reads.reads(jsonWithNoToken)
 

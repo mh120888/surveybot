@@ -23,4 +23,8 @@ class Application extends Controller {
   private def isTokenError(error: JsError): Boolean = {
     JsError.toJson(error).value.contains("obj.token[0]")
   }
+
+  def data = Action {
+    Ok(views.html.data("Data"))
+  }
 }
