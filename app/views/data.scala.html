@@ -1,4 +1,4 @@
-@(title: String)
+@(title: String)(submissions: List[String])
 
 <!DOCTYPE html>
 
@@ -10,5 +10,10 @@
         <script src="@routes.Assets.versioned("javascripts/hello.js")" type="text/javascript"></script>
     </head>
     <body>
+    <ul>
+    @for(submission <- submissions) {
+      <li>@submission</li>
+    }
+    </ul>
     </body>
 </html>

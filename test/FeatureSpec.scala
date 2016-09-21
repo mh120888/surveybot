@@ -6,7 +6,7 @@ import play.api.test.Helpers._
 import play.api.test._
 
 @RunWith(classOf[JUnitRunner])
-class ApplicationSpec extends Specification {
+class FeatureSpec extends Specification {
 
   "POST /survey" should {
 
@@ -46,11 +46,11 @@ class ApplicationSpec extends Specification {
   }
 
   "GET /data" should {
-    "returns a response of 200" in new WithApplication{
+    "returns a response of 200 and displays submission data" in new WithApplication{
       val result = route(FakeRequest(GET, "/data")).get
 
       status(result) must equalTo(OK)
-      contentAsString(result) must contain ("Data")
+      contentAsString(result) must contain ("story: 5, total: 4, add: 0, remove: 1")
     }
   }
 }
