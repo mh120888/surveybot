@@ -1,6 +1,6 @@
 package controllers
 
-import models.SlackPostData
+import models.{UserSubmissionRepository, SlackPostData, PostgresUserSubmissionUserSubmissionRepository}
 import play.api.libs.json._
 import play.api.mvc._
 
@@ -26,7 +26,7 @@ class ApplicationController extends Controller {
     JsError.toJson(error).value.contains("obj.token[0]")
   }
 
-  def data(repository: UserSubmissionRepository = UserSubmissionRepository()) = Action {
+  def data(repository: UserSubmissionRepository = PostgresUserSubmissionUserSubmissionRepository()) = Action {
     val submissions = repository.getAll
     Ok(views.html.data("Data")(submissions))
   }

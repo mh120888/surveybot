@@ -1,14 +1,15 @@
-package controllers
+package models
 
 import anorm.SqlParser._
 import anorm._
-import models.UserSubmission
 import play.api.Play.current
 import play.api.db._
 
-case class UserSubmissionRepository() {
+case class PostgresUserSubmissionUserSubmissionRepository() extends UserSubmissionRepository {
+  val allAttributes = "id, user_response, user_name"
+
   def getAll: List[UserSubmission] = DB.withConnection { implicit c =>
-    SQL("select * from submission").as(userSubmission *)
+    SQL("select " + allAttributes + " from submission").as(userSubmission *)
   }
 
   val userSubmission = {
