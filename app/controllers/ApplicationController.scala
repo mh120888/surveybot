@@ -1,10 +1,11 @@
 package controllers
 
-import models.{UserSubmissionRepository, SlackPostData, PostgresUserSubmissionUserSubmissionRepository}
+import com.google.inject.Inject
+import models.{PostgresUserSubmissionUserSubmissionRepository, SlackPostData}
 import play.api.libs.json._
 import play.api.mvc._
 
-class ApplicationController extends Controller {
+class ApplicationController @Inject()(repository: PostgresUserSubmissionUserSubmissionRepository) extends Controller {
 
   def index = Action {
     Ok(views.html.index("Your new application is ready."))
@@ -26,7 +27,7 @@ class ApplicationController extends Controller {
     JsError.toJson(error).value.contains("obj.token[0]")
   }
 
-  def data(repository: UserSubmissionRepository = PostgresUserSubmissionUserSubmissionRepository()) = Action {
+  def data = Action {
     val submissions = repository.getAll
     Ok(views.html.data("Data")(submissions))
   }
