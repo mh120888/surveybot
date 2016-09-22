@@ -6,7 +6,8 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Reads}
 
 case class SlackPostData (token: String,
-                          text: String)
+                          text: String,
+                          username: String)
 
 object SlackPostData {
   val SLACK_TOKEN = Play.current.configuration.getString("slack.integration").get
@@ -25,6 +26,7 @@ object SlackPostData {
 
   implicit def reads: Reads[SlackPostData] = (
     (JsPath \ "token")(0).read[String](correctToken) and
-    (JsPath \ "text")(0).read[String]
+    (JsPath \ "text")(0).read[String] and
+    (JsPath \ "user_name")(0).read[String]
   )(SlackPostData.apply _)
 }

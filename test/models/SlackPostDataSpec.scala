@@ -10,10 +10,10 @@ import play.api.test.WithApplication
 class SlackPostDataSpec extends Specification {
 
   "SlackPostData" should {
-    "#reads returns a JsSuccess if given a valid token and valid text" in new WithApplication{
+    "#reads returns a JsSuccess if given a valid token, valid text, and username" in new WithApplication{
       SlackPostData.setTestSlackToken("hi")
 
-      val validJson = Json.parse("""{"token":["hi"], "text": ["something"]}""")
+      val validJson = Json.parse("""{"token":["hi"], "text": ["something"], "user_name": ["malina"]}""")
       val result = SlackPostData.reads.reads(validJson)
 
       result.isSuccess must equalTo(true)
@@ -47,6 +47,16 @@ class SlackPostDataSpec extends Specification {
 
       result.isError must equalTo(true)
       result.recoverTotal( e => JsError.toJson(e).value.contains("obj.token[0]") must equalTo(true) )
+    }
+
+    "#reads returns a JsError if no username is given" in new WithApplication{
+      SlackPostData.setTestSlackToken("hi")
+
+      val jsonWithNoUserName = Json.parse("""{"token":["hi"], "text": ["something"]}""")
+      val result = SlackPostData.reads.reads(jsonWithNoUserName)
+
+      result.isError must equalTo(true)
+      result.recoverTotal( e => JsError.toJson(e).value.contains("obj.user_name[0]") must equalTo(true) )
     }
   }
 }

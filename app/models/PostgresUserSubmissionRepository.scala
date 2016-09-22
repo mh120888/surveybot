@@ -12,6 +12,14 @@ case class PostgresUserSubmissionRepository() extends UserSubmissionRepository {
     SQL("select " + allAttributes + " from submission").as(userSubmission *)
   }
 
+  def create(userSubmission: UserSubmission): Option[Long] = {
+    DB.withConnection { implicit c =>
+      SQL(s"""
+           INSERT INTO submission(user_response, user_name) VALUES ('${userSubmission.text}', '${userSubmission.username}')
+          """).executeInsert();
+    }
+  }
+
   val userSubmission = {
     get[Long]("id") ~
     get[String]("user_response") ~
