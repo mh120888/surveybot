@@ -3,16 +3,11 @@ package models
 import org.junit.runner.RunWith
 import org.specs2.mutable.Specification
 import org.specs2.runner.JUnitRunner
-import org.specs2.specification.BeforeEach
-import play.api.libs.json.{JsError, JsSuccess, Json}
+import play.api.libs.json.{JsError, Json}
 import play.api.test.WithApplication
 
 @RunWith(classOf[JUnitRunner])
 class SlackPostDataSpec extends Specification {
-
-//  def before = {
-//    SlackPostData.setTestSlackToken("hi")
-//  }
 
   "SlackPostData" should {
     "#reads returns a JsSuccess if given a valid token and valid text" in new WithApplication{

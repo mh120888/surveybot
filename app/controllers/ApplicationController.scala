@@ -26,7 +26,7 @@ class ApplicationController extends Controller {
     JsError.toJson(error).value.contains("obj.token[0]")
   }
 
-  def data(repository: SlackPostDataRepository = SlackPostDataRepository()) = Action {
+  def data(repository: UserSubmissionRepository = UserSubmissionRepository()) = Action {
     val submissions = repository.getAll
     Ok(views.html.data("Data")(submissions))
   }

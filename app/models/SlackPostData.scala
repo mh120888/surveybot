@@ -27,8 +27,4 @@ object SlackPostData {
     (JsPath \ "token")(0).read[String](correctToken) and
     (JsPath \ "text")(0).read[String]
   )(SlackPostData.apply _)
-
-  def getSubmissions = {
-    List("story: 5000, total: 4, add: 0, remove: 1")
-  }
 }

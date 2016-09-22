@@ -1,4 +1,4 @@
-@(title: String)(submissions: List[String])
+@(title: String)(submissions: List[UserSubmission])
 
 <!DOCTYPE html>
 
@@ -12,7 +12,7 @@
     <body>
     <ul>
     @for(submission <- submissions) {
-      <li>@submission</li>
+      <li>@submission.text - @submission.userName</li>
     }
     </ul>
     </body>
