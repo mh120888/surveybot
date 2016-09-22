@@ -1,11 +1,11 @@
 package controllers
 
 import com.google.inject.Inject
-import models.{PostgresUserSubmissionUserSubmissionRepository, SlackPostData}
+import models.{PostgresUserSubmissionRepository, SlackPostData}
 import play.api.libs.json._
 import play.api.mvc._
 
-class ApplicationController @Inject()(repository: PostgresUserSubmissionUserSubmissionRepository) extends Controller {
+class ApplicationController @Inject()(repository: PostgresUserSubmissionRepository) extends Controller {
 
   def index = Action {
     Ok(views.html.index("Your new application is ready."))

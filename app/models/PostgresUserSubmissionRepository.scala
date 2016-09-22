@@ -5,7 +5,7 @@ import anorm._
 import play.api.Play.current
 import play.api.db._
 
-case class PostgresUserSubmissionUserSubmissionRepository() extends UserSubmissionRepository {
+case class PostgresUserSubmissionRepository() extends UserSubmissionRepository {
   val allAttributes = "id, user_response, user_name"
 
   def getAll: List[UserSubmission] = DB.withConnection { implicit c =>
