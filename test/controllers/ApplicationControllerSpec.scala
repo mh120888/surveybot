@@ -21,7 +21,6 @@ class ApplicationControllerSpec extends Specification with Mockito {
 
       status(result) must equalTo(OK)
       contentAsString(result) must contain("story: 6, total: 8, add: 1, remove: 6")
-      contentAsString(result) must contain("New User")
     }
   }
 

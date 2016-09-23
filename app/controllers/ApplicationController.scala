@@ -1,7 +1,7 @@
 package controllers
 
 import com.google.inject.Inject
-import models.{PostgresUserSubmissionRepository, SlackPostData, UserSubmission}
+import models.{PostgresUserSubmissionRepository, SlackPostData, UserSubmission, UserSubmissionRepository}
 import play.api.libs.json._
 import play.api.mvc._
 
