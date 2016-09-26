@@ -22,13 +22,27 @@ class FeatureSpec extends Specification {
       contentAsString(result) must contain ("Success!")
     }
 
-    "with correct token and username, but no text, returns a response of 200 and error message" in new WithApplication{
+    "with correct token and username, but no text, returns a response of 200 and an error message" in new WithApplication{
       SlackPostData.setTestSlackToken("xjdk333")
 
       val result = route(FakeRequest(POST, "/survey").withFormUrlEncodedBody(("token", "xjdk333"), ("user_name", "Matt"))).get
 
       status(result) must equalTo(OK)
-      contentAsString(result) must contain ("Your submission is wrong.")
+      contentAsString(result) must contain ("There was a problem.")
+    }
+
+    "with correct token and username, but invalid text, returns a response of 200 and a descriptive error message" in new WithApplication{
+      SlackPostData.setTestSlackToken("xjdk333")
+
+      val result = route(FakeRequest(POST, "/survey").withFormUrlEncodedBody(("token", "xjdk333"), ("user_name", "Matt"), ("text", ""))).get
+
+      status(result) must equalTo(OK)
+      contentAsString(result) must contain ("There was a problem with your submission")
+      contentAsString(result) must contain ("Story is required")
+      contentAsString(result) must contain ("Total time is required")
+      contentAsString(result) must contain ("Time adding technical debt is required")
+      contentAsString(result) must contain ("Time removing technical debt is required")
+
     }
 
     "with incorrect token, no username, and no text returns a response of 401" in new WithApplication{

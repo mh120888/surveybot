@@ -3,7 +3,6 @@ package models
 import org.junit.runner.RunWith
 import org.specs2.mutable.Specification
 import org.specs2.runner.JUnitRunner
-import play.api.libs.json.{JsError, Json}
 import play.api.test.WithApplication
 
 @RunWith(classOf[JUnitRunner])
@@ -18,8 +17,33 @@ class UserSubmissionSpec extends Specification {
       result.text must equalTo(data.text)
       result.username must equalTo(data.username)
     }
+
+    "#validate returns a List containing an error message for a UserSubmission with no story present in text field" in new WithApplication {
+      var userSubmission = UserSubmission(text="", username = "matt")
+      val result = userSubmission.validate
+
+      result.mkString("\n") must contain("Story is required")
+    }
+
+    "#validate returns a List containing an error message for a UserSubmission with no total time present in text field" in new WithApplication {
+      var userSubmission = UserSubmission(text="", username = "matt")
+      val result = userSubmission.validate
+
+      result.mkString("\n") must contain("Total time is required")
+    }
+
+    "#validate returns a List containing an error message for a UserSubmission with no time adding technical debt present in text field" in new WithApplication {
+      var userSubmission = UserSubmission(text="", username = "matt")
+      val result = userSubmission.validate
+
+      result.mkString("\n") must contain("Time adding technical debt is required")
+    }
+
+    "#validate returns a List containing an error message for a UserSubmission with no time removing technical debt present in text field" in new WithApplication {
+      var userSubmission = UserSubmission(text="", username = "matt")
+      val result = userSubmission.validate
+
+      result.mkString("\n") must contain("Time removing technical debt is required")
+    }
   }
 }
-
-
-//Repository.save(usersubmission)

@@ -1,7 +1,7 @@
 package controllers
 
 import com.google.inject.Inject
-import models.{PostgresUserSubmissionRepository, SlackPostData, UserSubmission, UserSubmissionRepository}
+import models.{PostgresUserSubmissionRepository, SlackPostData, UserSubmission}
 import play.api.libs.json._
 import play.api.mvc._
 
@@ -17,14 +17,24 @@ class ApplicationController @Inject()(repository: PostgresUserSubmissionReposito
 
     result match {
       case success: JsSuccess[SlackPostData] =>
-        saveSubmissionAndReturnResponse(success)
+        validateSubmissionAndReturnResponse(success)
       case error: JsError =>
         returnErrorResponse(error)
     }
   }
 
-  private def saveSubmissionAndReturnResponse(success: JsSuccess[SlackPostData]): Result = {
+  private def validateSubmissionAndReturnResponse(success: JsSuccess[SlackPostData]): Result = {
     val userSubmission = UserSubmission.createFromSlackPostData(success.get)
+    val errors: Seq[String] = userSubmission.validate
+    if (errors.isEmpty) {
+      saveSubmissionAndReturnResponse(userSubmission)
+    } else {
+      Ok("There was a problem with your submission." + errors.mkString("\n"))
+    }
+
+  }
+
+  private def saveSubmissionAndReturnResponse(userSubmission: UserSubmission): Result = {
     val id: Option[Long] = repository.create(userSubmission)
 
     if (id.isDefined) {
@@ -40,7 +50,7 @@ class ApplicationController @Inject()(repository: PostgresUserSubmissionReposito
     } else if (isUsernameError(error)) {
       BadRequest
     } else {
-      Ok("Your submission is wrong.")
+      Ok("There was a problem.")
     }
   }
 
