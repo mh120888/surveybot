@@ -17,30 +17,42 @@ class UserSubmissionSpec extends Specification {
       result.username must equalTo(data.username)
     }
 
-    "#validate returns a List containing an error message for a UserSubmission with no story present in text field" in new WithApplication {
+    "#isValid returns true for a valid UserSubmission" in new WithApplication {
+      var userSubmission = UserSubmission(text="story: 1, total: 4, add: 0, remove: 1", username = "matt")
+
+      userSubmission.isValid() must equalTo(true)
+    }
+
+    "#isValid returns false for an invalid UserSubmission" in new WithApplication {
       var userSubmission = UserSubmission(text="", username = "matt")
-      userSubmission.validate
+
+      userSubmission.isValid() must equalTo(false)
+    }
+
+    "after calling #isValid on a UserSubmission with no story present in text field, userSubmission.errors includes a message indicating story is required" in new WithApplication {
+      var userSubmission = UserSubmission(text="", username = "matt")
+      userSubmission.isValid()
 
       userSubmission.errors.mkString("\n") must contain("Story is required")
     }
 
-    "#validate returns a List containing an error message for a UserSubmission with no total time present in text field" in new WithApplication {
+    "after calling #isValid on a UserSubmission with no total time present in text field, userSubmission.errors includes a message indicating total time is required" in new WithApplication {
       var userSubmission = UserSubmission(text="", username = "matt")
-      userSubmission.validate
+      userSubmission.isValid()
 
       userSubmission.errors.mkString("\n") must contain("Total time is required")
     }
 
-    "#validate returns a List containing an error message for a UserSubmission with no time adding technical debt present in text field" in new WithApplication {
+    "after calling #isValid on a UserSubmission with no time adding technical debt present in text field, userSubmission.errors includes a message indicating time adding technical debt is required" in new WithApplication {
       var userSubmission = UserSubmission(text="", username = "matt")
-      userSubmission.validate
+      userSubmission.isValid()
 
       userSubmission.errors.mkString("\n") must contain("Time adding technical debt is required")
     }
 
-    "#validate returns a List containing an error message for a UserSubmission with no time removing technical debt present in text field" in new WithApplication {
+    "after calling #isValid on a UserSubmission with no time removing technical debt present in text field, userSubmission.errors includes a message indicating time removing technical debt is required" in new WithApplication {
       var userSubmission = UserSubmission(text="", username = "matt")
-      userSubmission.validate
+      userSubmission.isValid()
 
       userSubmission.errors.mkString("\n") must contain("Time removing technical debt is required")
     }

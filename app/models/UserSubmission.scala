@@ -5,13 +5,18 @@ import scala.collection.mutable.ArrayBuffer
 case class UserSubmission(id: Option[Long] = None, text: String, username: String) {
   var errors = ArrayBuffer[String]()
 
-  def validate: Unit = {
+  def isValid(): Boolean = {
+    validate
+    if (errors.isEmpty) true else false
+  }
+
+  private def validate: Unit = {
     for (validation <- validations) {
       if (validation.validationLogic(validation.field)) errors += validation.errorMessage
     }
   }
 
-  val required = (textToCheckFor: String) => {
+  private val required = (textToCheckFor: String) => {
     !text.toLowerCase.contains(textToCheckFor)
   }
 

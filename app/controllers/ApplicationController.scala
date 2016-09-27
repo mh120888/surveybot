@@ -12,9 +12,7 @@ class ApplicationController @Inject()(repository: PostgresUserSubmissionReposito
   }
 
   def survey = Action { request =>
-    val bodyAsJson = Json.toJson(request.body.asFormUrlEncoded.get)
-    val result: JsResult[SlackPostData] = bodyAsJson.validate[SlackPostData]
-
+    val result: JsResult[SlackPostData] = requestBodyAsJson(request).validate[SlackPostData]
     result match {
       case success: JsSuccess[SlackPostData] =>
         validateSubmissionAndReturnResponse(success)
@@ -23,20 +21,26 @@ class ApplicationController @Inject()(repository: PostgresUserSubmissionReposito
     }
   }
 
+  def data = Action {
+    val submissions = repository.getAll
+    Ok(views.html.data("Data")(submissions))
+  }
+
+  private def requestBodyAsJson(request: Request[AnyContent]): JsValue = {
+    Json.toJson(request.body.asFormUrlEncoded.get)
+  }
+
   private def validateSubmissionAndReturnResponse(success: JsSuccess[SlackPostData]): Result = {
     val userSubmission = UserSubmission.createFromSlackPostData(success.get)
-    userSubmission.validate
-    if (userSubmission.errors.isEmpty) {
+    if (userSubmission.isValid()) {
       saveSubmissionAndReturnResponse(userSubmission)
     } else {
       Ok("There was a problem with your submission.\n - " + userSubmission.errors.mkString("\n - "))
     }
-
   }
 
   private def saveSubmissionAndReturnResponse(userSubmission: UserSubmission): Result = {
     val id: Option[Long] = repository.create(userSubmission)
-
     if (id.isDefined) {
       Ok("Success!")
     } else {
@@ -55,15 +59,13 @@ class ApplicationController @Inject()(repository: PostgresUserSubmissionReposito
   }
 
   private def isUsernameError(error: JsError): Boolean = {
-    JsError.toJson(error).value.contains("obj.user_name[0]")
+    JsError.toJson(error).value.contains(USERNAME_ERROR_INDICATOR)
   }
 
   private def isTokenError(error: JsError): Boolean = {
-    JsError.toJson(error).value.contains("obj.token[0]")
+    JsError.toJson(error).value.contains(TOKEN_ERROR_INDICATOR)
   }
 
-  def data = Action {
-    val submissions = repository.getAll
-    Ok(views.html.data("Data")(submissions))
-  }
+  private val TOKEN_ERROR_INDICATOR = "obj.token[0]"
+  private val USERNAME_ERROR_INDICATOR = "obj.user_name[0]"
 }
