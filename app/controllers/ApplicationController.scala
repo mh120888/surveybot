@@ -25,11 +25,11 @@ class ApplicationController @Inject()(repository: PostgresUserSubmissionReposito
 
   private def validateSubmissionAndReturnResponse(success: JsSuccess[SlackPostData]): Result = {
     val userSubmission = UserSubmission.createFromSlackPostData(success.get)
-    val errors: Seq[String] = userSubmission.validate
-    if (errors.isEmpty) {
+    userSubmission.validate
+    if (userSubmission.errors.isEmpty) {
       saveSubmissionAndReturnResponse(userSubmission)
     } else {
-      Ok("There was a problem with your submission." + errors.mkString("\n"))
+      Ok("There was a problem with your submission.\n - " + userSubmission.errors.mkString("\n - "))
     }
 
   }

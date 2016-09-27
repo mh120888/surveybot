@@ -3,24 +3,23 @@ package models
 import scala.collection.mutable.ArrayBuffer
 
 case class UserSubmission(id: Option[Long] = None, text: String, username: String) {
-  def validate: Seq[String] = {
-    var errors = ArrayBuffer[String]()
-    for (element <- validations) {
-      if (element._3(element._1)) {
-        errors += element._2
-      }
+  var errors = ArrayBuffer[String]()
+
+  def validate: Unit = {
+    for (validation <- validations) {
+      if (validation.validationLogic(validation.field)) errors += validation.errorMessage
     }
-    errors
   }
 
   val required = (textToCheckFor: String) => {
     !text.toLowerCase.contains(textToCheckFor)
   }
 
-  val validations = List(("story:", "Story is required", required),
-                          ("total:", "Total time is required", required),
-                          ("add:", "Time adding technical debt is required", required),
-                          ("remove:", "Time removing technical debt is required", required))
+  private val validations = List(Validation("story:", "Story is required", required),
+                                 Validation("total:", "Total time is required", required),
+                                 Validation("add:", "Time adding technical debt is required", required),
+                                 Validation("remove:", "Time removing technical debt is required", required))
+
 
 }
 

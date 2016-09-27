@@ -1,4 +1,4 @@
-import models.SlackPostData
+import models.{PostgresUserSubmissionRepository, SlackPostData}
 import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._
@@ -42,7 +42,17 @@ class FeatureSpec extends Specification {
       contentAsString(result) must contain ("Total time is required")
       contentAsString(result) must contain ("Time adding technical debt is required")
       contentAsString(result) must contain ("Time removing technical debt is required")
+    }
 
+    "with invalid text does not save a new user submission to the database" in new WithApplication{
+      SlackPostData.setTestSlackToken("xjdk333")
+      val repo = PostgresUserSubmissionRepository()
+      val initialCount = repo.getAll.length
+
+      val result = route(FakeRequest(POST, "/survey").withFormUrlEncodedBody(("token", "xjdk333"), ("user_name", "Matt"), ("text", ""))).get
+      val currentCount = repo.getAll.length
+
+      currentCount must equalTo(initialCount)
     }
 
     "with incorrect token, no username, and no text returns a response of 401" in new WithApplication{
