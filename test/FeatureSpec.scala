@@ -44,6 +44,15 @@ class FeatureSpec extends Specification {
       contentAsString(result) must contain ("Time removing technical debt is required")
     }
 
+    "with correct token and username, but invalid text (total time not in range), returns a response of 200 and a descriptive error message" in new WithApplication {
+      SlackPostData.setTestSlackToken("xjdk333")
+
+      val result = route(FakeRequest(POST, "/survey").withFormUrlEncodedBody(("token", "xjdk333"), ("user_name", "Matt"), ("text", "story: 1, total: 15, add: 0, remove: 1"))).get
+
+      status(result) must equalTo(OK)
+      contentAsString(result) must contain ("Total time must be in the range 0-12")
+    }
+
     "with invalid text does not save a new user submission to the database" in new WithApplication{
       SlackPostData.setTestSlackToken("xjdk333")
       val repo = PostgresUserSubmissionRepository()
