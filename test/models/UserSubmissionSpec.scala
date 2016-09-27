@@ -29,53 +29,53 @@ class UserSubmissionSpec extends Specification {
       userSubmission.isValid() must equalTo(false)
     }
 
-    "after calling #isValid on a UserSubmission with no story present in text field, userSubmission.errors includes a message indicating story is required" in {
+    s"after calling #isValid on a UserSubmission with no story present in text field, userSubmission.errors includes ${UserSubmission.STORY_REQUIRED}" in {
+      var userSubmission = UserSubmission(text="total: 1", username = "matt")
+      userSubmission.isValid()
+
+      userSubmission.getErrors.mkString("\n") must contain(UserSubmission.STORY_REQUIRED)
+    }
+
+    s"after calling #isValid on a UserSubmission with no total time present in text field, userSubmission.errors includes ${UserSubmission.TOTAL_TIME_REQUIRED}" in {
       var userSubmission = UserSubmission(text="", username = "matt")
       userSubmission.isValid()
 
-      userSubmission.getErrors().mkString("\n") must contain("Story is required")
+      userSubmission.getErrors.mkString("\n") must contain(UserSubmission.TOTAL_MUST_BE_IN_RANGE)
     }
 
-    "after calling #isValid on a UserSubmission with no total time present in text field, userSubmission.errors includes a message indicating total time is required" in {
+    s"after calling #isValid on a UserSubmission with no time adding technical debt present in text field, userSubmission.errors includes ${UserSubmission.ADD_TECH_DEBT_REQUIRED}" in {
       var userSubmission = UserSubmission(text="", username = "matt")
       userSubmission.isValid()
 
-      userSubmission.getErrors().mkString("\n") must contain("Total time is required")
+      userSubmission.getErrors.mkString("\n") must contain(UserSubmission.ADD_TECH_DEBT_REQUIRED)
     }
 
-    "after calling #isValid on a UserSubmission with no time adding technical debt present in text field, userSubmission.errors includes a message indicating time adding technical debt is required" in {
+    s"after calling #isValid on a UserSubmission with no time removing technical debt present in text field, userSubmission.errors includes ${UserSubmission.REMOVE_TECH_DEBT_REQUIRED}" in {
       var userSubmission = UserSubmission(text="", username = "matt")
       userSubmission.isValid()
 
-      userSubmission.getErrors().mkString("\n") must contain("Time adding technical debt is required")
+      userSubmission.getErrors.mkString("\n") must contain(UserSubmission.REMOVE_TECH_DEBT_REQUIRED)
     }
 
-    "after calling #isValid on a UserSubmission with no time removing technical debt present in text field, userSubmission.errors includes a message indicating time removing technical debt is required" in {
-      var userSubmission = UserSubmission(text="", username = "matt")
-      userSubmission.isValid()
-
-      userSubmission.getErrors().mkString("\n") must contain("Time removing technical debt is required")
-    }
-
-    "after calling #isValid on a UserSubmission with text including 'total: 15', userSubmission.errors includes a message indicating total time must be in range" in {
+    s"after calling #isValid on a UserSubmission with text including 'total: 15', userSubmission.errors includes ${UserSubmission.TOTAL_MUST_BE_IN_RANGE}" in {
       var userSubmission = UserSubmission(text="story: 1, total: 15, add: 0, remove: 0", username = "matt")
       userSubmission.isValid()
 
-      userSubmission.getErrors().mkString("\n") must contain("Total time must be in the range 0-12")
+      userSubmission.getErrors.mkString("\n") must contain(UserSubmission.TOTAL_MUST_BE_IN_RANGE)
     }
 
-    "after calling #isValid on a UserSubmission with text including 'add: 15', userSubmission.errors includes a message indicating time adding technical debt must be in range" in {
+    s"after calling #isValid on a UserSubmission with text including 'add: 15', userSubmission.errors includes ${UserSubmission.ADD_MUST_BE_IN_RANGE}" in {
       var userSubmission = UserSubmission(text="story: 1, total: 15, add: 15, remove: 0", username = "matt")
       userSubmission.isValid()
 
-      userSubmission.getErrors().mkString("\n") must contain("Time adding technical debt must be in the range 0-12")
+      userSubmission.getErrors.mkString("\n") must contain(UserSubmission.ADD_MUST_BE_IN_RANGE)
     }
 
-    "after calling #isValid on a UserSubmission with text including 'remove: 15', userSubmission.errors includes a message indicating time removing technical debt must be in range" in {
+    s"after calling #isValid on a UserSubmission with text including 'remove: 15', userSubmission.errors includes ${UserSubmission.REMOVE_MUST_BE_IN_RANGE}" in {
       var userSubmission = UserSubmission(text="story: 1, total: 15, add: 0, remove: 15", username = "matt")
       userSubmission.isValid()
 
-      userSubmission.getErrors().mkString("\n") must contain("Time removing technical debt must be in the range 0-12")
+      userSubmission.getErrors.mkString("\n") must contain(UserSubmission.REMOVE_MUST_BE_IN_RANGE)
     }
   }
 }

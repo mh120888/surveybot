@@ -15,7 +15,7 @@ case class UserSubmission(id: Option[Long] = None, text: String, username: Strin
     }
   }
 
-  def getErrors(): Seq[String] = {
+  def getErrors: Seq[String] = {
     this.errors
   }
 
@@ -50,16 +50,25 @@ case class UserSubmission(id: Option[Long] = None, text: String, username: Strin
     submission
   }
 
-  private val validations = List(Validation("story", "Story is required", required),
-                                 Validation("total", "Total time is required", required),
-                                 Validation("add", "Time adding technical debt is required", required),
-                                 Validation("remove", "Time removing technical debt is required", required),
-                                 Validation("total", "Total time must be in the range 0-12", inRange0To12),
-                                 Validation("add", "Time adding technical debt must be in the range 0-12", inRange0To12),
-                                 Validation("remove", "Time removing technical debt must be in the range 0-12", inRange0To12))
+  private val validations = List(Validation("story", UserSubmission.STORY_REQUIRED, required),
+                                 Validation("total", UserSubmission.TOTAL_TIME_REQUIRED, required),
+                                 Validation("add", UserSubmission.ADD_TECH_DEBT_REQUIRED, required),
+                                 Validation("remove", UserSubmission.REMOVE_TECH_DEBT_REQUIRED, required),
+                                 Validation("total", UserSubmission.TOTAL_MUST_BE_IN_RANGE, inRange0To12),
+                                 Validation("add", UserSubmission.ADD_MUST_BE_IN_RANGE, inRange0To12),
+                                 Validation("remove", UserSubmission.REMOVE_MUST_BE_IN_RANGE, inRange0To12))
+
 }
 
 object UserSubmission {
+  val STORY_REQUIRED = "Story is required"
+  val TOTAL_TIME_REQUIRED = "Total time is required"
+  val ADD_TECH_DEBT_REQUIRED = "Time adding technical debt is required"
+  val REMOVE_TECH_DEBT_REQUIRED = "Time removing technical debt is required"
+  val TOTAL_MUST_BE_IN_RANGE = "Total time must be in the range 0-12"
+  val ADD_MUST_BE_IN_RANGE = "Time adding technical debt must be in the range 0-12"
+  val REMOVE_MUST_BE_IN_RANGE = "Time removing technical debt must be in the range 0-12"
+
   def createFromSlackPostData(data: SlackPostData): UserSubmission = {
     UserSubmission(text = data.text, username = data.username)
   }
