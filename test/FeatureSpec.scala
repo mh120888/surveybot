@@ -105,4 +105,12 @@ class FeatureSpec extends Specification {
       contentAsString(result) must contain (validSubmission)
     }
   }
+
+  "GET /dashboard" should {
+    "returns a response of 200" in new WithApplication{
+      val result = route(FakeRequest(GET, "/dashboard")).get
+
+      status(result) must equalTo(OK)
+    }
+  }
 }

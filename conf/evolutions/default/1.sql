@@ -1,8 +1,8 @@
-# Submissions schema
+# submissions schema
 
 # --- !Ups
 
-CREATE TABLE Submission (
+CREATE TABLE submissions (
     id BIGSERIAL PRIMARY KEY,
     user_response varchar(255),
     user_name varchar(255)
@@ -10,4 +10,4 @@ CREATE TABLE Submission (
 
 # --- !Downs
 
-DROP TABLE Submission;
+DROP TABLE submissions;

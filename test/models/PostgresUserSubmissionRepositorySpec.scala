@@ -3,7 +3,6 @@ package models
 import org.junit.runner.RunWith
 import org.specs2.mutable.Specification
 import org.specs2.runner.JUnitRunner
-import play.api.libs.json.{JsError, Json}
 import play.api.test.WithApplication
 
 @RunWith(classOf[JUnitRunner])
