@@ -35,7 +35,7 @@ class ApplicationController @Inject()(repository: PostgresUserSubmissionReposito
     if (userSubmission.isValid()) {
       saveSubmissionAndReturnResponse(userSubmission)
     } else {
-      Ok("There was a problem with your submission.\n - " + userSubmission.errors.mkString("\n - "))
+      Ok("There was a problem with your submission.\n - " + userSubmission.getErrors.mkString("\n - "))
     }
   }
 

@@ -12,7 +12,7 @@ import play.api.test._
 class ApplicationControllerSpec extends Specification with Mockito {
 
   "#data" should {
-    "return a response of 200 and displays submission data" in new WithApplication {
+    "return a response of 200 and displays submission data" in {
       val fakeRequest = FakeRequest(GET, "/does-not-matter")
       val mockRepository = mock[PostgresUserSubmissionRepository]
       mockRepository.getAll returns List(UserSubmission(text = "story: 6, total: 8, add: 1, remove: 6", username = "New User"))
@@ -55,6 +55,21 @@ class ApplicationControllerSpec extends Specification with Mockito {
 
       status(result) must equalTo(OK)
       contentAsString(result) must contain("Uh oh! I wasn't able to save that - please try submitting it again.")
+    }
+
+    "return a response of 200 with an error message when submission is invalid" in new WithApplication {
+      SlackPostData.setTestSlackToken("ABCDEFG")
+      val userSubmission = mock[UserSubmission]
+      val fakeRequest = FakeRequest(GET, "/does-not-matter")
+        .withFormUrlEncodedBody(("token", "ABCDEFG"),
+          ("text", "story: 1, total: 15, add: 3, remove: 2"),
+          ("user_name", "New User"))
+      userSubmission.isValid() returns false
+
+      val result = new ApplicationController(repository = PostgresUserSubmissionRepository()).survey.apply(fakeRequest)
+
+      status(result) must equalTo(OK)
+      contentAsString(result) must contain("There was a problem with your submission")
     }
   }
 }
