@@ -1,4 +1,4 @@
-import models.{PostgresUserSubmissionRepository, SlackPostData}
+import models.{PostgresSurveyRespondentRepository, PostgresUserSubmissionRepository, SlackPostData}
 import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._
@@ -111,6 +111,16 @@ class FeatureSpec extends Specification {
       val result = route(FakeRequest(GET, "/dashboard")).get
 
       status(result) must equalTo(OK)
+    }
+  }
+
+  "POST /survey_respondents" should {
+    "return a response with status of 201 and includes the text 'The user 'matt' was added'" in new WithApplication {
+      val result = route(FakeRequest(POST, "/survey_respondents")
+        .withFormUrlEncodedBody(("username", "matt"))).get
+
+      status(result) must equalTo(CREATED)
+      contentAsString(result) must contain("The user matt was added")
     }
   }
 }
