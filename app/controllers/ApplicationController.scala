@@ -1,7 +1,7 @@
 package controllers
 
 import com.google.inject.Inject
-import models.{PostgresUserSubmissionRepository, SlackPostData, UserSubmission}
+import models.{PostgresUserSubmissionRepository, SlackPostData, SurveyRespondent, UserSubmission}
 import play.api.libs.json._
 import play.api.mvc._
 
@@ -24,6 +24,10 @@ class ApplicationController @Inject()(repository: PostgresUserSubmissionReposito
   def data = Action {
     val submissions = repository.getAll
     Ok(views.html.data("Data")(submissions))
+  }
+
+  def dashboard = Action {
+    Ok(views.html.dashboard("Dashboard")(Some("testing"))(List(SurveyRespondent(username = "malina"))))
   }
 
   private def requestBodyAsJson(request: Request[AnyContent]): JsValue = {

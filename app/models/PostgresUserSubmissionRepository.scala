@@ -9,13 +9,13 @@ case class PostgresUserSubmissionRepository() extends UserSubmissionRepository {
   val allAttributes = "id, user_response, user_name"
 
   def getAll: List[UserSubmission] = DB.withConnection { implicit c =>
-    SQL("select " + allAttributes + " from submission").as(userSubmission *)
+    SQL("select " + allAttributes + " from submissions").as(userSubmission *)
   }
 
   def create(userSubmission: UserSubmission): Option[Long] = {
     DB.withConnection { implicit c =>
       SQL(s"""
-           INSERT INTO submission(user_response, user_name) VALUES ('${userSubmission.text}', '${userSubmission.username}')
+           INSERT INTO submissions(user_response, user_name) VALUES ('${userSubmission.text}', '${userSubmission.username}')
           """).executeInsert();
     }
   }
