@@ -17,8 +17,8 @@ Requires Java 1.8, Scala 2.11.8, and SBT
 
 ## Data Storage
 The preferred way to run the application locally is to use Play's H2 in-memory database for data storage. To do so, two environment variables must first be set:
-- `DATABASE_URL='jdbc:h2:mem:play;MODE=PostgreSQL;DB_CLOSE_DELAY=-1'`
-- `DATABASE_DRIVER='org.h2.Driver'`
+- `export DATABASE_URL='jdbc:h2:mem:play;MODE=PostgreSQL;DB_CLOSE_DELAY=-1'`
+- `export DATABASE_DRIVER='org.h2.Driver'`
 
 In the staging and production environments on Heroku, PostgreSQL is used instead. Deploying a Play application to Heroku automatically sets the `DATABASE_URL` to the appropriate value, but `DATABASE_DRIVER` must be set to `org.postgresql.Driver`.
 
