@@ -1,26 +1,8 @@
 package models
 
 import scala.collection.mutable
-import scala.collection.mutable.ArrayBuffer
 
-case class UserSubmission(id: Option[Long] = None, text: String, username: String) {
-  def isValid(): Boolean = {
-    this.validate()
-    if (this.errors.isEmpty) true else false
-  }
-
-  private def validate(): Unit = {
-    for (validation <- validations) {
-      if (!validation.validationLogic(validation.field)) this.errors += validation.errorMessage
-    }
-  }
-
-  def getErrors: Seq[String] = {
-    this.errors
-  }
-
-  private var errors = ArrayBuffer[String]()
-
+case class UserSubmission(id: Option[Long] = None, text: String, username: String) extends Validatable {
   private val required = (textToCheckFor: String) => {
     text.toLowerCase.contains(textToCheckFor)
   }
@@ -50,13 +32,13 @@ case class UserSubmission(id: Option[Long] = None, text: String, username: Strin
     submission
   }
 
-  private val validations = List(Validation("story", UserSubmission.STORY_REQUIRED, required),
-                                 Validation("total", UserSubmission.TOTAL_TIME_REQUIRED, required),
-                                 Validation("add", UserSubmission.ADD_TECH_DEBT_REQUIRED, required),
-                                 Validation("remove", UserSubmission.REMOVE_TECH_DEBT_REQUIRED, required),
-                                 Validation("total", UserSubmission.TOTAL_MUST_BE_IN_RANGE, inRange0To12),
-                                 Validation("add", UserSubmission.ADD_MUST_BE_IN_RANGE, inRange0To12),
-                                 Validation("remove", UserSubmission.REMOVE_MUST_BE_IN_RANGE, inRange0To12))
+  val validations = List(Validation("story", UserSubmission.STORY_REQUIRED, required),
+    Validation("total", UserSubmission.TOTAL_TIME_REQUIRED, required),
+    Validation("add", UserSubmission.ADD_TECH_DEBT_REQUIRED, required),
+    Validation("remove", UserSubmission.REMOVE_TECH_DEBT_REQUIRED, required),
+    Validation("total", UserSubmission.TOTAL_MUST_BE_IN_RANGE, inRange0To12),
+    Validation("add", UserSubmission.ADD_MUST_BE_IN_RANGE, inRange0To12),
+    Validation("remove", UserSubmission.REMOVE_MUST_BE_IN_RANGE, inRange0To12))
 
 }
 

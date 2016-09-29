@@ -1,3 +1,10 @@
+@(surveyRespondentForm: Form[SurveyRespondentForm])(implicit messages: Messages)
+@import helper._
+
 <div>
     Interface for adding survey respondent
+    @helper.form(action = routes.ApplicationController.createSurveyRespondent()) {
+        @helper.inputText(surveyRespondentForm("username"))
+        <button type="submit">Add Survey Respondent</button>
+    }
 </div>

@@ -2,12 +2,12 @@ package controllers
 
 import com.google.inject.Inject
 import models._
-import play.api.data.Form
-import play.api.data.Forms._
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json._
 import play.api.mvc._
 
-class ApplicationController @Inject()(userSubmissionRepository: PostgresUserSubmissionRepository, surveyRespondentRepository: PostgresSurveyRespondentRepository) extends Controller {
+
+class ApplicationController @Inject()(userSubmissionRepository: PostgresUserSubmissionRepository = PostgresUserSubmissionRepository(), surveyRespondentRepository: PostgresSurveyRespondentRepository = PostgresSurveyRespondentRepository(), val messagesApi: MessagesApi) extends Controller with I18nSupport {
 
   def index = Action {
     Ok(views.html.index("Your new application is ready."))
@@ -28,25 +28,30 @@ class ApplicationController @Inject()(userSubmissionRepository: PostgresUserSubm
     Ok(views.html.data("Data")(submissions))
   }
 
-  def dashboard = Action {
-    Ok(views.html.dashboard("Dashboard")(Some("testing"))(List(SurveyRespondent(username = "malina"))))
+  def dashboard = Action { implicit request =>
+    Ok(views.html.dashboard("Dashboard")(surveyRespondentRepository.getAll))
   }
 
   def createSurveyRespondent = Action { request =>
     val data = request.body.asFormUrlEncoded.get
-    val surveyRespondentForm = SurveyRespondentForm.form.bindFromRequest(data).get
-    val surveyRespondent = SurveyRespondent(username = surveyRespondentForm.username)
-
-    saveSurveyRespondentAndReturnResponse(surveyRespondent)
-
+    SurveyRespondentForm.form.bindFromRequest(data).fold(
+      formWithErrors => {
+        BadRequest
+      },
+      surveyRespondentForm => {
+        val surveyRespondent = SurveyRespondent(username = surveyRespondentForm.username)
+        saveSurveyRespondentAndReturnResponse(surveyRespondent)
+      }
+    )
   }
 
   private def saveSurveyRespondentAndReturnResponse(surveyRespondent: SurveyRespondent): Result = {
     val id: Option[Long] = surveyRespondentRepository.create(surveyRespondent)
     if (id.isDefined) {
       val flashMessage = s"The user ${surveyRespondent.username} was added"
-      val surveyRespondents = surveyRespondentRepository.getAll
-      Created(views.html.dashboard("Dashboard")(Some(flashMessage))(surveyRespondents))
+      Redirect("/dashboard").flashing(
+        "success" -> flashMessage
+      )
     } else {
       InternalServerError
     }
