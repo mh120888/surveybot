@@ -115,10 +115,11 @@ class FeatureSpec extends Specification {
   }
 
   "POST /survey_respondents/:id/delete" should {
-    "return a response of 303" in new WithApplication{
+    "returns a response of 303" in new WithApplication{
       val repo = PostgresSurveyRespondentRepository()
-      repo.create(SurveyRespondent(id = Option(5), username = "malina"))
-      val result = route(FakeRequest(POST, "/survey_respondents/5/delete")).get
+      val id = repo.create(SurveyRespondent(username = "malina")).get
+
+      val result = route(FakeRequest(POST, "/survey_respondents/" + id + "/delete")).get
 
       status(result) must equalTo(SEE_OTHER)
     }

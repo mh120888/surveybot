@@ -1,5 +1,7 @@
 @(title: String)(surveyRespondents: List[SurveyRespondent])(implicit flash: Flash)
+
 @import helper._
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -17,8 +19,8 @@
     @surveyRespondents.map { surveyRespondent =>
       <li>
         @surveyRespondent.username
-        @form(routes.ApplicationController.deleteSurveyRespondent(surveyRespondent.id.get)) {
-            <input type="submit" value="Delete">
+        @form(routes.ApplicationController.deleteSurveyRespondent(surveyRespondent.username, surveyRespondent.id.get)) {
+            <input type="submit" value="remove @surveyRespondent.username">
          }
       </li>
     }

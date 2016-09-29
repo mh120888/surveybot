@@ -31,9 +31,9 @@ class ApplicationController @Inject()(submissionRepository: PostgresUserSubmissi
     Ok(views.html.dashboard("Dashboard")(respondentRepository.getAll()))
   }
 
-  def deleteSurveyRespondent(id: Long) = Action {
+  def deleteSurveyRespondent(username: String, id: Long) = Action {
     respondentRepository.deleteById(id)
-    val flashMessage = "User has been deleted"
+    val flashMessage = s"The user ${username} was removed"
     Redirect("/dashboard").flashing("success" -> flashMessage)
   }
 
