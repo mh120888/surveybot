@@ -15,7 +15,13 @@ case class PostgresSurveyRespondentRepository() {
   }
 
   def getAll(): List[SurveyRespondent] = DB.withConnection { implicit c =>
-    SQL("select * from survey_respondents").as(surveyRespondent *)
+    SQL("SELECT * FROM survey_respondents").as(surveyRespondent *)
+  }
+
+  def deleteAll(): Boolean = {
+    DB.withConnection { implicit c =>
+      SQL("TRUNCATE table survey_respondents").execute();
+    }
   }
 
   val surveyRespondent = {
