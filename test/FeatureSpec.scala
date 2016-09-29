@@ -113,4 +113,12 @@ class FeatureSpec extends Specification {
       status(result) must equalTo(OK)
     }
   }
+
+//  "POST /survey_respondents/:username/delete" should {
+//    "return a response of 200" in new WithApplication{
+//      val result = route(FakeRequest(POST, "/survey_respondents/:user_name/delete")).get
+//
+//      status(result) must equalTo(OK)
+//    }
+//  }
 }

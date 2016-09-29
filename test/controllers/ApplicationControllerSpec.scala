@@ -24,6 +24,11 @@ class ApplicationControllerSpec extends Specification with Mockito {
     }
   }
 
+  "#survey_respondents" should {
+    "return a response of 200" in new WithApplication {
+    }
+  }
+
   "#survey" should {
     "return a response of 200 with success text when submission is saved" in new WithApplication {
       SlackPostData.setTestSlackToken("ABCDEFG")
