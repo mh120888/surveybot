@@ -15,7 +15,7 @@ class PostgresSurveyRespondentRepositorySpec extends Specification {
   }
 
   "PostgresSurveyRespondentRepository" should {
-    "#create returns Some[Long] and surveyRespondent exists in database when given valid surveyRespondent" in new WithApplication(){
+    "#create returns Some[Long] and surveyRespondent exists in database when given valid surveyRespondent" in new WithApplication {
       val repo = PostgresSurveyRespondentRepository()
       deleteAll()
       val result: Option[Long] = repo.create(SurveyRespondent(username = "malina"))
@@ -23,7 +23,7 @@ class PostgresSurveyRespondentRepositorySpec extends Specification {
       result.isDefined must equalTo(true)
     }
 
-    "#getAll returns one SurveyRespondent when there is only one SurveyRespondent in the db" in new WithApplication(){
+    "#getAll returns one SurveyRespondent when there is only one SurveyRespondent in the db" in new WithApplication {
       val repo = PostgresSurveyRespondentRepository()
       deleteAll()
       repo.create(SurveyRespondent(username = "malina"))
@@ -36,28 +36,23 @@ class PostgresSurveyRespondentRepositorySpec extends Specification {
     "#findById returns one SurveyRespondent given a SurveyRespondent's ID" in new WithApplication {
       val repo = PostgresSurveyRespondentRepository()
       repo.create(SurveyRespondent(username = "malina"))
+      val lastRecordId = repo.getAll().last.id.get
 
-//      val lastRecordId = repo.getAll().last.id
-//      val result = repo.findById(lastRecordId)
-//      result.username must equalTo("malina")
+      val result = repo.findById(lastRecordId)
+
+      result.username must equalTo("malina")
     }
 
-//    "#delete removes a single record in the db" in new WithApplication {
-//      val repo = PostgresSurveyRespondentRepository()
-//      deleteAll()
-//
-//    }
-  }
+    "#deleteById removes a single record in the db" in new WithApplication {
+      val repo = PostgresSurveyRespondentRepository()
+      deleteAll()
+      repo.create(SurveyRespondent(username = "matt"))
+      val lastRecordId = repo.getAll().last.id.get
 
-//    "#delete removes a single record in the db" in new WithApplication(){
-//      val repo = PostgresSurveyRespondentRepository()
-//      deleteAll()
-//      repo.create(SurveyRespondent(username = "matt"))
-//
-//      repo.delete(SurveyRespondent(username = "matt"))
-//
-//      val results = repo.getAll()
-//      results.length must equalTo(0)
-//    }
-//  }
+      repo.deleteById(lastRecordId)
+
+      val results = repo.getAll()
+      results.length must equalTo(0)
+    }
+  }
 }

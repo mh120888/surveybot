@@ -7,7 +7,7 @@ GET     /                                               controllers.ApplicationC
 POST    /survey                                         controllers.ApplicationController.survey
 GET     /data                                           controllers.ApplicationController.data()
 GET     /dashboard                                      controllers.ApplicationController.dashboard
-# POST    /survey_respondents/:username/delete            controllers.ApplicationController.deleteSurveyRespondent(username: String)
+POST    /survey_respondents/:id/delete                  controllers.ApplicationController.deleteSurveyRespondent(id: Long)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

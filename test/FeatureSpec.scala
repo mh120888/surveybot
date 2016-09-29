@@ -1,4 +1,4 @@
-import models.{PostgresUserSubmissionRepository, SlackPostData}
+import models.{PostgresSurveyRespondentRepository, PostgresUserSubmissionRepository, SlackPostData, SurveyRespondent}
 import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._
@@ -114,11 +114,13 @@ class FeatureSpec extends Specification {
     }
   }
 
-//  "POST /survey_respondents/:username/delete" should {
-//    "return a response of 200" in new WithApplication{
-//      val result = route(FakeRequest(POST, "/survey_respondents/:user_name/delete")).get
-//
-//      status(result) must equalTo(OK)
-//    }
-//  }
+  "POST /survey_respondents/:id/delete" should {
+    "return a response of 303" in new WithApplication{
+      val repo = PostgresSurveyRespondentRepository()
+      repo.create(SurveyRespondent(id = Option(5), username = "malina"))
+      val result = route(FakeRequest(POST, "/survey_respondents/5/delete")).get
+
+      status(result) must equalTo(SEE_OTHER)
+    }
+  }
 }
