@@ -2,7 +2,10 @@ package models
 
 case class SurveyRespondent (id: Option[Long] = None, username: String, survey_id: Int = 1) extends Validatable {
   private val unique = (textToCheckFor: String) => {
-    val surveyRespondent: Option[SurveyRespondent] = SurveyRespondent.repo.findByUsername(this.username)
+    var surveyRespondent: Option[SurveyRespondent] = SurveyRespondent.repo.findByUsername(this.username)
+    if (surveyRespondent == null) {
+      surveyRespondent = None
+    }
     if (surveyRespondent.isDefined) false else true
   }
 

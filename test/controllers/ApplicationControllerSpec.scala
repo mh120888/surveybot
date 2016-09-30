@@ -1,6 +1,6 @@
 package controllers
 
-import models.{PostgresSurveyRespondentRepository, PostgresUserSubmissionRepository, SlackPostData, UserSubmission}
+import models.{PostgresUserSubmissionRepository, SlackPostData, UserSubmission}
 import org.junit.runner._
 import org.specs2.mock.Mockito
 import org.specs2.mutable._

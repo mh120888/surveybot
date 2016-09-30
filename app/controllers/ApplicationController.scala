@@ -40,26 +40,29 @@ class ApplicationController @Inject()(userSubmissionRepository: PostgresUserSubm
       },
       surveyRespondentForm => {
         val surveyRespondent = SurveyRespondent(username = surveyRespondentForm.username)
-        saveSurveyRespondentAndReturnResponse(surveyRespondent)
+        validateSurveyRespondentAndReturnResponse(surveyRespondent)
       }
     )
   }
 
-  private def saveSurveyRespondentAndReturnResponse(surveyRespondent: SurveyRespondent): Result = {
+  private def validateSurveyRespondentAndReturnResponse(surveyRespondent: SurveyRespondent): Result = {
     if (surveyRespondent.isValid()) {
-      val id: Option[Long] = surveyRespondentRepository.create(surveyRespondent)
-      if (id.isDefined) {
-        val flashMessage = s"The user ${surveyRespondent.username} was added"
-        Redirect("/dashboard").flashing(
-          "success" -> flashMessage
-        )
-      } else {
-        InternalServerError
-      }
+      saveSurveyRespondentAndReturnResponse(surveyRespondent)
     } else {
       Redirect("/dashboard").flashing(
         "error" -> s"Username ${surveyRespondent.username} already exists"
       )
+    }
+  }
+
+  private def saveSurveyRespondentAndReturnResponse(surveyRespondent: SurveyRespondent): Result = {
+    val id: Option[Long] = surveyRespondentRepository.create(surveyRespondent)
+    if (id.isDefined) {
+      Redirect("/dashboard").flashing(
+        "success" -> s"The user ${surveyRespondent.username} was added"
+      )
+    } else {
+      InternalServerError
     }
   }
 
