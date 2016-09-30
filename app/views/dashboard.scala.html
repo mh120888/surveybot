@@ -6,19 +6,24 @@
 <head>
     <title>@title</title>
     <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/dashboard.css")">
     <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
     <script src="@routes.Assets.versioned("javascripts/hello.js")" type="text/javascript"></script>
     </head>
     <body>
-    <div>@flash.get("success").getOrElse("")</div>
-    <div>@flash.get("error").getOrElse("")</div>
     <h1>Dashboard</h1>
-    <h2>Survey Respondents</h2>
-    <ul>
-    @for(surveyRespondent <- surveyRespondents) {
-      <li>@surveyRespondent.username</li>
-    }
-    </ul>
+    <div class='flash'>
+        <p>@flash.get("success").getOrElse()
+        @flash.get("error").getOrElse()</p>
+    </div>
+    <div id='survey_respondents_list' class='half'>
+        <h2>Survey Respondents</h2>
+        <ul>
+        @for(surveyRespondent <- surveyRespondents) {
+          <li>@surveyRespondent.username</li>
+        }
+        </ul>
+    </div>
     @add_survey_respondent(SurveyRespondentForm.form)
     </body>
 </html>
