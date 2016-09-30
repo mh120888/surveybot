@@ -92,10 +92,10 @@ class ApplicationControllerSpec extends Specification with Mockito {
       val fakeRequest = FakeRequest(POST, "/survey_respondents/6/delete")
       val mockSubmissionRepository = mock[PostgresUserSubmissionRepository]
       val mockRespondentRepository = mock[PostgresSurveyRespondentRepository]
-      mockRespondentRepository.create(firstRespondent) returns Some(2)
+      mockRespondentRepository.findById(6) returns firstRespondent
 
       val result = new ApplicationController(submissionRepository = mockSubmissionRepository, respondentRepository = mockRespondentRepository)
-        .deleteSurveyRespondent("malina", 6).apply(fakeRequest)
+        .deleteSurveyRespondent(6).apply(fakeRequest)
 
       status(result) must equalTo(SEE_OTHER)
       flash(result).get("success") must beSome("The user malina was removed")

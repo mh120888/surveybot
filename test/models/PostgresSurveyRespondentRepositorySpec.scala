@@ -35,21 +35,20 @@ class PostgresSurveyRespondentRepositorySpec extends Specification {
 
     "#findById returns one SurveyRespondent given a SurveyRespondent's ID" in new WithApplication {
       val repo = PostgresSurveyRespondentRepository()
-      repo.create(SurveyRespondent(username = "malina"))
-      val lastRecordId = repo.getAll().last.id.get
+      val id = repo.create(SurveyRespondent(username = "malina")).get
 
-      val result = repo.findById(lastRecordId)
+      val result = repo.findById(id)
 
       result.username must equalTo("malina")
+      result.id must equalTo(Option(id))
     }
 
-    "#deleteById removes a single record in the db" in new WithApplication {
+    "#deleteById removes a single record in the db given a SurveyRespondent's ID" in new WithApplication {
       val repo = PostgresSurveyRespondentRepository()
       deleteAll()
-      repo.create(SurveyRespondent(username = "matt"))
-      val lastRecordId = repo.getAll().last.id.get
+      val id = repo.create(SurveyRespondent(username = "matt")).get
 
-      repo.deleteById(lastRecordId)
+      repo.deleteById(id)
 
       val results = repo.getAll()
       results.length must equalTo(0)
