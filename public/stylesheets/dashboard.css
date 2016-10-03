@@ -1,0 +1,24 @@
+
+body {
+    width: 100%;
+    max-width: 600px;
+    margin:  0 auto;
+}
+
+h1 {
+    text-align: center
+}
+
+.half {
+    display: inline-block;
+    width: 49%;
+    vertical-align: top;
+}
+
+dd {
+    margin: 0;
+}
+
+.flash p {
+    padding: 1em;
+}

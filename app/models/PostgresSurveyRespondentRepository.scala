@@ -14,6 +14,11 @@ case class PostgresSurveyRespondentRepository() {
     }
   }
 
+  def findByUsername(username: String): Option[SurveyRespondent] = DB.withConnection { implicit c =>
+    val result = SQL(s"select * from survey_respondents WHERE user_name=('${username}') LIMIT 1").as(surveyRespondent *)
+    if (result.length > 0) result.headOption else None
+  }
+
   def getAll(): List[SurveyRespondent] = DB.withConnection { implicit c =>
     SQL("SELECT * FROM survey_respondents").as(surveyRespondent *)
   }

@@ -5,11 +5,9 @@ import org.junit.runner._
 import org.specs2.mock.Mockito
 import org.specs2.mutable._
 import org.specs2.runner._
-import play.api.mvc.Result
+import play.api.i18n.MessagesApi
 import play.api.test.Helpers._
 import play.api.test._
-
-import scala.concurrent.Future
 
 @RunWith(classOf[JUnitRunner])
 class ApplicationControllerSpec extends Specification with Mockito {
@@ -18,11 +16,9 @@ class ApplicationControllerSpec extends Specification with Mockito {
     "return a response of 200 and displays submission data" in {
       val fakeRequest = FakeRequest(GET, "/does-not-matter")
       val mockSubmissionRepository = mock[PostgresUserSubmissionRepository]
-      val mockRespondentRepository = mock[PostgresSurveyRespondentRepository]
       mockSubmissionRepository.getAll returns List(UserSubmission(text = "story: 6, total: 8, add: 1, remove: 6", username = "New User"))
 
-      val result = new ApplicationController(submissionRepository = mockSubmissionRepository, respondentRepository = mockRespondentRepository)
-        .data.apply(fakeRequest)
+      val result = new ApplicationController(submissionRepository = mockSubmissionRepository, messagesApi = mock[MessagesApi]).data.apply(fakeRequest)
 
       status(result) must equalTo(OK)
       contentAsString(result) must contain("story: 6, total: 8, add: 1, remove: 6")
@@ -35,14 +31,13 @@ class ApplicationControllerSpec extends Specification with Mockito {
       val userSubmission = UserSubmission(text = "story: 1, total: 5, add: 3, remove: 2", username = "New User")
       val fakeRequest = FakeRequest(GET, "/does-not-matter")
         .withFormUrlEncodedBody(("token", "ABCDEFG"),
-                                ("text", "story: 1, total: 5, add: 3, remove: 2"),
-                                ("user_name", "New User"))
+          ("text", "story: 1, total: 5, add: 3, remove: 2"),
+          ("user_name", "New User"))
       val mockSubmissionRepository = mock[PostgresUserSubmissionRepository]
       val mockRespondentRepository = mock[PostgresSurveyRespondentRepository]
       mockSubmissionRepository.create(userSubmission) returns Some(2)
 
-      val result = new ApplicationController(submissionRepository = mockSubmissionRepository, respondentRepository = mockRespondentRepository)
-        .survey.apply(fakeRequest)
+      val result = new ApplicationController(submissionRepository = mockSubmissionRepository, messagesApi = mock[MessagesApi]).survey.apply(fakeRequest)
 
       status(result) must equalTo(OK)
       contentAsString(result) must contain("Success!")
@@ -53,15 +48,14 @@ class ApplicationControllerSpec extends Specification with Mockito {
       val userSubmission = UserSubmission(text = "story: 1, total: 5, add: 3, remove: 2", username = "New User")
       val fakeRequest = FakeRequest(GET, "/does-not-matter")
         .withFormUrlEncodedBody(("token", "ABCDEFG"),
-                                ("text", "story: 1, total: 5, add: 3, remove: 2"),
-                                ("user_name", "New User"))
+          ("text", "story: 1, total: 5, add: 3, remove: 2"),
+          ("user_name", "New User"))
 
       val mockSubmissionRepository = mock[PostgresUserSubmissionRepository]
       val mockRespondentRepository = mock[PostgresSurveyRespondentRepository]
       mockSubmissionRepository.create(userSubmission) returns None
 
-      val result = new ApplicationController(submissionRepository = mockSubmissionRepository, respondentRepository = mockRespondentRepository)
-        .survey.apply(fakeRequest)
+      val result = new ApplicationController(submissionRepository = mockSubmissionRepository, messagesApi = mock[MessagesApi]).survey.apply(fakeRequest)
 
       status(result) must equalTo(OK)
       contentAsString(result) must contain("Uh oh! I wasn't able to save that - please try submitting it again.")
@@ -78,8 +72,7 @@ class ApplicationControllerSpec extends Specification with Mockito {
       val mockRespondentRepository = mock[PostgresSurveyRespondentRepository]
       userSubmission.isValid() returns false
 
-      val result = new ApplicationController(submissionRepository = mockSubmissionRepository, respondentRepository = mockRespondentRepository)
-        .survey.apply(fakeRequest)
+      val result = new ApplicationController(messagesApi = mock[MessagesApi]).survey.apply(fakeRequest)
 
       status(result) must equalTo(OK)
       contentAsString(result) must contain("There was a problem with your submission")
@@ -94,7 +87,7 @@ class ApplicationControllerSpec extends Specification with Mockito {
       val mockRespondentRepository = mock[PostgresSurveyRespondentRepository]
       mockRespondentRepository.findById(6) returns firstRespondent
 
-      val result = new ApplicationController(submissionRepository = mockSubmissionRepository, respondentRepository = mockRespondentRepository)
+      val result = new ApplicationController(submissionRepository = mockSubmissionRepository, respondentRepository = mockRespondentRepository, messagesApi = mock[MessagesApi])
         .deleteSurveyRespondent(6).apply(fakeRequest)
 
       status(result) must equalTo(SEE_OTHER)

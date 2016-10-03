@@ -2,12 +2,14 @@ package controllers
 
 import com.google.inject.Inject
 import models._
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json._
 import play.api.mvc._
 
-class ApplicationController @Inject()(submissionRepository: PostgresUserSubmissionRepository,
-                                      respondentRepository: PostgresSurveyRespondentRepository) extends Controller {
 
+class ApplicationController @Inject()(submissionRepository: PostgresUserSubmissionRepository = PostgresUserSubmissionRepository(),
+                                      respondentRepository: PostgresSurveyRespondentRepository = PostgresSurveyRespondentRepository(),
+                                      val messagesApi: MessagesApi) extends Controller with I18nSupport {
   def index = Action {
     Ok(views.html.index("Your new application is ready."))
   }
@@ -31,13 +33,45 @@ class ApplicationController @Inject()(submissionRepository: PostgresUserSubmissi
     Ok(views.html.dashboard("Dashboard")(respondentRepository.getAll()))
   }
 
-  def deleteSurveyRespondent(id: Long) = Action {
+  def deleteSurveyRespondent(id: Long) = Action { implicit request =>
     val username = respondentRepository.findById(id).username
     val flashMessage = s"The user ${username} was removed"
-//    println(respondentRepository.findById(id))
-//    val flashMessage = "The user was removed"
     respondentRepository.deleteById(id)
     Redirect("/dashboard").flashing("success" -> flashMessage)
+  }
+
+  def createSurveyRespondent = Action { request =>
+    val data = request.body.asFormUrlEncoded.get
+    SurveyRespondentForm.form.bindFromRequest(data).fold(
+      formWithErrors => {
+        BadRequest
+      },
+      surveyRespondentForm => {
+        val surveyRespondent = SurveyRespondent(username = surveyRespondentForm.username)
+        validateSurveyRespondentAndReturnResponse(surveyRespondent)
+      }
+    )
+  }
+
+  private def validateSurveyRespondentAndReturnResponse(surveyRespondent: SurveyRespondent): Result = {
+    if (surveyRespondent.isValid()) {
+      saveSurveyRespondentAndReturnResponse(surveyRespondent)
+    } else {
+      Redirect("/dashboard").flashing(
+        "error" -> s"Username ${surveyRespondent.username} already exists"
+      )
+    }
+  }
+
+  private def saveSurveyRespondentAndReturnResponse(surveyRespondent: SurveyRespondent): Result = {
+    val id: Option[Long] = respondentRepository.create(surveyRespondent)
+    if (id.isDefined) {
+      Redirect("/dashboard").flashing(
+        "success" -> s"The user ${surveyRespondent.username} was added"
+      )
+    } else {
+      InternalServerError
+    }
   }
 
   private def requestBodyAsJson(request: Request[AnyContent]): JsValue = {

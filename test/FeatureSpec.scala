@@ -115,13 +115,30 @@ class FeatureSpec extends Specification {
   }
 
   "POST /survey_respondents/:id/delete" should {
-    "returns a response of 303" in new WithApplication{
+    "returns a response of 303" in new WithApplication {
       val repo = PostgresSurveyRespondentRepository()
       val id = repo.create(SurveyRespondent(username = "malina")).get
 
       val result = route(FakeRequest(POST, "/survey_respondents/" + id + "/delete")).get
 
       status(result) must equalTo(SEE_OTHER)
+    }
+  }
+
+  "POST /survey_respondents" should {
+    "returns a 303 response that includes the text 'The user dave was added' when given valid data" in new WithApplication {
+      val result = route(FakeRequest(POST, "/survey_respondents")
+        .withFormUrlEncodedBody(("username", "dave"))).get
+
+      status(result) must equalTo(SEE_OTHER)
+      flash(result).get("success") must beSome("The user dave was added")
+    }
+
+    "returns a 400 response when given invalid data" in new WithApplication {
+      val result = route(FakeRequest(POST, "/survey_respondents")
+        .withFormUrlEncodedBody(("something_incorrect", "matt"))).get
+
+      status(result) must equalTo(BAD_REQUEST)
     }
   }
 }
