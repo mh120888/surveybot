@@ -60,23 +60,6 @@ class ApplicationControllerSpec extends Specification with Mockito {
       status(result) must equalTo(OK)
       contentAsString(result) must contain("Uh oh! I wasn't able to save that - please try submitting it again.")
     }
-
-    "return a response of 200 with an error message when submission is invalid" in new WithApplication {
-      SlackPostData.setTestSlackToken("ABCDEFG")
-      val userSubmission = mock[UserSubmission]
-      val fakeRequest = FakeRequest(GET, "/does-not-matter")
-        .withFormUrlEncodedBody(("token", "ABCDEFG"),
-          ("text", "story: 1, total: 15, add: 3, remove: 2"),
-          ("user_name", "New User"))
-      val mockSubmissionRepository = mock[PostgresUserSubmissionRepository]
-      val mockRespondentRepository = mock[PostgresSurveyRespondentRepository]
-      userSubmission.isValid() returns false
-
-      val result = new ApplicationController(messagesApi = mock[MessagesApi]).survey.apply(fakeRequest)
-
-      status(result) must equalTo(OK)
-      contentAsString(result) must contain("There was a problem with your submission")
-    }
   }
 
   "#deleteSurveyRespondent" should {
