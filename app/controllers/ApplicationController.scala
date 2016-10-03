@@ -1,11 +1,12 @@
 package controllers
 
 import com.google.inject.Inject
-import models.{PostgresUserSubmissionRepository, SlackPostData, SurveyRespondent, UserSubmission}
+import models._
 import play.api.libs.json._
 import play.api.mvc._
 
-class ApplicationController @Inject()(repository: PostgresUserSubmissionRepository) extends Controller {
+class ApplicationController @Inject()(submissionRepository: PostgresUserSubmissionRepository,
+                                      respondentRepository: PostgresSurveyRespondentRepository) extends Controller {
 
   def index = Action {
     Ok(views.html.index("Your new application is ready."))
@@ -22,12 +23,21 @@ class ApplicationController @Inject()(repository: PostgresUserSubmissionReposito
   }
 
   def data = Action {
-    val submissions = repository.getAll
+    val submissions = submissionRepository.getAll
     Ok(views.html.data("Data")(submissions))
   }
 
-  def dashboard = Action {
-    Ok(views.html.dashboard("Dashboard")(Some("testing"))(List(SurveyRespondent(username = "malina"))))
+  def dashboard = Action { implicit request =>
+    Ok(views.html.dashboard("Dashboard")(respondentRepository.getAll()))
+  }
+
+  def deleteSurveyRespondent(id: Long) = Action {
+    val username = respondentRepository.findById(id).username
+    val flashMessage = s"The user ${username} was removed"
+//    println(respondentRepository.findById(id))
+//    val flashMessage = "The user was removed"
+    respondentRepository.deleteById(id)
+    Redirect("/dashboard").flashing("success" -> flashMessage)
   }
 
   private def requestBodyAsJson(request: Request[AnyContent]): JsValue = {
@@ -44,7 +54,7 @@ class ApplicationController @Inject()(repository: PostgresUserSubmissionReposito
   }
 
   private def saveSubmissionAndReturnResponse(userSubmission: UserSubmission): Result = {
-    val id: Option[Long] = repository.create(userSubmission)
+    val id: Option[Long] = submissionRepository.create(userSubmission)
     if (id.isDefined) {
       Ok("Success!")
     } else {

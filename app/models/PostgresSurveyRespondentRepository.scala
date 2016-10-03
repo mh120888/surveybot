@@ -15,7 +15,19 @@ case class PostgresSurveyRespondentRepository() {
   }
 
   def getAll(): List[SurveyRespondent] = DB.withConnection { implicit c =>
-    SQL("select * from survey_respondents").as(surveyRespondent *)
+    SQL("SELECT * FROM survey_respondents").as(surveyRespondent *)
+  }
+
+  def findById(id: Long): SurveyRespondent = {
+    DB.withConnection { implicit c =>
+      SQL(s"SELECT * FROM survey_respondents where id = ('${id}')").as(surveyRespondent *).head
+    }
+  }
+
+  def deleteById(id: Long) {
+    DB.withConnection { implicit c =>
+      SQL(s"DELETE FROM survey_respondents where id = ('${id}')").executeUpdate();
+    }
   }
 
   val surveyRespondent = {
