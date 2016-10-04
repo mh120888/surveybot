@@ -1,7 +1,8 @@
 package models
 
-case class SurveyRespondent (id: Option[Long] = None, username: String, survey_id: Int = 1) extends Validatable {
-  private val unique = (textToCheckFor: String) => {
+case class SurveyRespondent(id: Option[Long] = None, username: String, survey_id: Int = 1) extends Validatable {
+
+  private val unique = () => {
     var surveyRespondent: Option[SurveyRespondent] = SurveyRespondent.repo.findByUsername(this.username)
     if (surveyRespondent == null) {
       surveyRespondent = None
@@ -9,7 +10,7 @@ case class SurveyRespondent (id: Option[Long] = None, username: String, survey_i
     if (surveyRespondent.isDefined) false else true
   }
 
-  override val validations: Seq[Validation] = List(Validation("username", SurveyRespondent.USERNAME_MUST_BE_UNIQUE, unique))
+  override val validations: Seq[Validation] = List(Validation(SurveyRespondent.USERNAME_MUST_BE_UNIQUE, unique))
 }
 
 object SurveyRespondent {

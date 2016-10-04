@@ -10,7 +10,7 @@ trait Validatable {
 
   private def validate(): Unit = {
     for (validation <- validations) {
-      if (!validation.validationLogic(validation.field)) this.errors += validation.errorMessage
+      if (!validation.validationLogic()) this.errors += validation.errorMessage
     }
   }
 
