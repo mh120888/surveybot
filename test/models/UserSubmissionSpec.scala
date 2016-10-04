@@ -22,6 +22,12 @@ class UserSubmissionSpec extends Specification {
       userSubmission.isValid() must equalTo(true)
     }
 
+    "#isValid returns true for a valid UserSubmission for MEETING" in {
+      val userSubmission = UserSubmission(text="MEETING 2", username = "cuvuglio")
+
+      userSubmission.isValid() must equalTo(true)
+    }
+
     "#isValid returns false for an invalid UserSubmission" in {
       val userSubmission = UserSubmission(text="", username = "matt")
 

@@ -15,7 +15,7 @@ class FeatureSpec extends Specification {
 
       val result = route(FakeRequest(POST, "/survey")
         .withFormUrlEncodedBody(("token", "ABCDEFG"),
-                                ("text", "story: 1, total: 5, add: 3, remove: 2"),
+                                ("text", "STORY TSF-489 5 20%"),
                                 ("user_name", "Matt"))).get
 
       status(result) must equalTo(OK)
@@ -37,11 +37,7 @@ class FeatureSpec extends Specification {
       val result = route(FakeRequest(POST, "/survey").withFormUrlEncodedBody(("token", "xjdk333"), ("user_name", "Matt"), ("text", ""))).get
 
       status(result) must equalTo(OK)
-      contentAsString(result) must contain ("There was a problem with your submission")
-      contentAsString(result) must contain ("Story is required")
-      contentAsString(result) must contain ("Total time is required")
-      contentAsString(result) must contain ("Time adding technical debt is required")
-      contentAsString(result) must contain ("Time removing technical debt is required")
+      contentAsString(result) must contain ("There was a problem with your submission.")
     }
 
     "with invalid text does not save a new user submission to the database" in new WithApplication{
@@ -84,7 +80,7 @@ class FeatureSpec extends Specification {
     "returns a response of 200 and displays submission data" in new WithApplication{
       SlackPostData.setTestSlackToken("ABCDEFG")
 
-      val validSubmission = "story: 5, total: 4, add: 0, remove: 1"
+      val validSubmission = "MEETING 4"
       route(FakeRequest(POST, "/survey")
         .withFormUrlEncodedBody(("token", "ABCDEFG"),
                                 ("text", validSubmission),

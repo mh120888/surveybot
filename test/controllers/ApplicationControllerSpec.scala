@@ -28,10 +28,10 @@ class ApplicationControllerSpec extends Specification with Mockito {
   "#survey" should {
     "return a response of 200 with success text when submission is saved" in new WithApplication {
       SlackPostData.setTestSlackToken("ABCDEFG")
-      val userSubmission = UserSubmission(text = "story: 1, total: 5, add: 3, remove: 2", username = "New User")
+      val userSubmission = UserSubmission(text = "BUG XYZ-40 4 10%", username = "New User")
       val fakeRequest = FakeRequest(GET, "/does-not-matter")
         .withFormUrlEncodedBody(("token", "ABCDEFG"),
-          ("text", "story: 1, total: 5, add: 3, remove: 2"),
+          ("text", "BUG XYZ-40 4 10%"),
           ("user_name", "New User"))
       val mockSubmissionRepository = mock[PostgresUserSubmissionRepository]
       val mockRespondentRepository = mock[PostgresSurveyRespondentRepository]
@@ -45,10 +45,10 @@ class ApplicationControllerSpec extends Specification with Mockito {
 
     "return a response of 200 with error message when submission is not saved" in new WithApplication {
       SlackPostData.setTestSlackToken("ABCDEFG")
-      val userSubmission = UserSubmission(text = "story: 1, total: 5, add: 3, remove: 2", username = "New User")
+      val userSubmission = UserSubmission(text = "MEETING 1", username = "New User")
       val fakeRequest = FakeRequest(GET, "/does-not-matter")
         .withFormUrlEncodedBody(("token", "ABCDEFG"),
-          ("text", "story: 1, total: 5, add: 3, remove: 2"),
+          ("text", "MEETING 1"),
           ("user_name", "New User"))
 
       val mockSubmissionRepository = mock[PostgresUserSubmissionRepository]
