@@ -23,7 +23,7 @@
         @surveyRespondents.map { surveyRespondent =>
           <li>
             @surveyRespondent.username
-            @form(routes.ApplicationController.deleteSurveyRespondent(surveyRespondent.id.get)) {
+            @form(routes.SurveyRespondentController.deleteSurveyRespondent(surveyRespondent.id.get)) {
                 <input type="submit" value="remove @surveyRespondent.username">
              }
           </li>
