@@ -16,12 +16,18 @@ class UserSubmissionControllerSpec extends Specification with Mockito {
     "return a response of 200 and displays submission data" in {
       val fakeRequest = FakeRequest(GET, "/does-not-matter")
       val mockSubmissionRepository = mock[PostgresUserSubmissionRepository]
-      mockSubmissionRepository.getAll returns List(UserSubmission(text = "story: 6, total: 8, add: 1, remove: 6", username = "New User"))
+      val listOfStories = List(UserSubmission(text = "STORY TSF-489 5 50%", username = "Matt"))
+      val listOfBugs = List(UserSubmission(text = "BUG TSF-100 1 40%", username = "Matt"))
+      val listOfMeetings = List(UserSubmission(text = "MEETING 2", username = "Matt"))
+      mockSubmissionRepository.getAll(UserSubmission.STORY) returns listOfStories
+      mockSubmissionRepository.getAll(UserSubmission.BUG) returns listOfBugs
+      mockSubmissionRepository.getAll(UserSubmission.MEETING) returns listOfMeetings
+      val expectedContent = views.html.data.render("Data", listOfStories, listOfBugs, listOfMeetings)
 
       val result = new UserSubmissionController(submissionRepository = mockSubmissionRepository, messagesApi = mock[MessagesApi]).data.apply(fakeRequest)
 
       status(result) must equalTo(OK)
-      contentAsString(result) must contain("story: 6, total: 8, add: 1, remove: 6")
+      contentAsString(result) must contain(contentAsString(expectedContent))
     }
   }
 }

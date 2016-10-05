@@ -1,19 +1,70 @@
-@(title: String)(submissions: List[UserSubmission])
+@(title: String)(stories: List[UserSubmission])(bugs: List[UserSubmission])(meetings: List[UserSubmission])
 
 <!DOCTYPE html>
 
 <html lang="en">
-    <head>
-        <title>@title</title>
-        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
-        <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
-        <script src="@routes.Assets.versioned("javascripts/hello.js")" type="text/javascript"></script>
+<head>
+    <title>@title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/data.css")">
+    <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
+    <script src="@routes.Assets.versioned("javascripts/hello.js")" type="text/javascript"></script>
     </head>
     <body>
-    <ul>
-    @for(submission <- submissions) {
-      <li>@submission.text</li>
-    }
-    </ul>
+    <h1>All Submissions</h1>
+    <h2>Stories</h2>
+    <table class='stories'>
+        <tr>
+            <th>Username</th>
+            <th>Date</th>
+            <th>Activity ID</th>
+            <th>Hours Spent on Activity</th>
+            <th>% of Time Spent Trying to Understand Code</th>
+        </tr>
+        @for(story <- stories) {
+        <tr>
+            <td data-label='Username:'>@story.username</td>
+            <td data-label="Date:">@story.showDate</td>
+            <td data-label="Activity ID:">@story.showActivityID</td>
+            <td data-label="Hours Spent:">@story.showTimeForStoryOrBug</td>
+            <td data-label="% Time Trying to Understand Code:">@story.showPercentage</td>
+        </tr>
+        }
+    </table>
+    <h2>Bugs</h2>
+    <table class='bugs'>
+        <tr>
+            <th>Username</th>
+            <th>Date</th>
+            <th>Activity ID</th>
+            <th>Hours Spent on Activity</th>
+            <th>% of Time Spent Trying to Understand Code</th>
+        </tr>
+        @for(bug <- bugs) {
+        <tr>
+            <td data-label='Username:'>@bug.username</td>
+            <td data-label="Date:">@bug.showDate</td>
+            <td data-label="Activity ID:">@bug.showActivityID</td>
+            <td data-label="Hours Spent:">@bug.showTimeForStoryOrBug</td>
+            <td data-label="% Time Trying to Understand Code:">@bug.showPercentage</td>
+        </tr>
+        }
+    </table>
+    <h2>Meetings</h2>
+    <table class='meetings'>
+        <tr>
+            <th>Username</th>
+            <th>Date</th>
+            <th>Hours Spent on Activity</th>
+        </tr>
+        @for(meeting <- meetings) {
+        <tr>
+            <td data-label='Username:'>@meeting.username</td>
+            <td data-label='Date:'>@meeting.showDate</td>
+            <td data-label='Hours Spent:'>@meeting.showTimeForMeeting</td>
+        </tr>
+        }
+    </table>
     </body>
 </html>
