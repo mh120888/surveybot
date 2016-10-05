@@ -13,9 +13,6 @@ CREATE TABLE survey_respondents (
     survey_id integer REFERENCES surveys
 );
 
-INSERT INTO survey_respondents (user_name) VALUES ('malina');
-INSERT INTO survey_respondents (user_name) VALUES ('matt');
-
 # --- !Downs
 
 DROP TABLE surveys;
