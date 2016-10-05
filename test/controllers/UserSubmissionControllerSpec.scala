@@ -1,6 +1,7 @@
 package controllers
 
 import models._
+import org.joda.time.DateTime
 import org.junit.runner._
 import org.specs2.mock.Mockito
 import org.specs2.mutable._
@@ -15,16 +16,23 @@ class UserSubmissionControllerSpec extends Specification with Mockito {
   "#data" should {
     "return a response of 200 and displays submission data" in {
       val fakeRequest = FakeRequest(GET, "/does-not-matter")
-      val mockSubmissionRepository = mock[PostgresUserSubmissionRepository]
-      val listOfStories = List(UserSubmission(text = "STORY TSF-489 5 50%", username = "Matt"))
-      val listOfBugs = List(UserSubmission(text = "BUG TSF-100 1 40%", username = "Matt"))
-      val listOfMeetings = List(UserSubmission(text = "MEETING 2", username = "Matt"))
-      mockSubmissionRepository.getAll(UserSubmission.STORY) returns listOfStories
-      mockSubmissionRepository.getAll(UserSubmission.BUG) returns listOfBugs
-      mockSubmissionRepository.getAll(UserSubmission.MEETING) returns listOfMeetings
-      val expectedContent = views.html.data.render("Data", listOfStories, listOfBugs, listOfMeetings)
+      val mockStoryRepository = mock[PostgresUserSubmissionRepository]
+      val mockStory = mock[UserSubmission]
+      mockStory.isStory returns true
+      val mockBug = mock[UserSubmission]
+      mockBug.isBug returns true
+      val mockMeeting = mock[UserSubmission]
+      mockMeeting.isMeeting returns true
 
-      val result = new UserSubmissionController(submissionRepository = mockSubmissionRepository, messagesApi = mock[MessagesApi]).data.apply(fakeRequest)
+      val allSubmissionsInRange = List(mockStory, mockBug, mockMeeting)
+      mockStoryRepository.getAllFromDateRange(any[DateTime], any[DateTime]) returns allSubmissionsInRange
+
+      val expectedContent = views.html.data.render("Data",
+        allSubmissionsInRange.filter(submission => submission.isStory),
+        allSubmissionsInRange.filter(submission => submission.isBug),
+        allSubmissionsInRange.filter(submission => submission.isMeeting))
+
+      val result = new UserSubmissionController(submissionRepository = mockStoryRepository, messagesApi = mock[MessagesApi]).data.apply(fakeRequest)
 
       status(result) must equalTo(OK)
       contentAsString(result) must contain(contentAsString(expectedContent))

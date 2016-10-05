@@ -2,12 +2,13 @@ package controllers
 
 import com.google.inject.Inject
 import models._
+import org.joda.time.DateTime
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json._
 import play.api.mvc._
 
-
 class UserSubmissionController @Inject()(submissionRepository: PostgresUserSubmissionRepository = PostgresUserSubmissionRepository(),
+                                         timeCalculator: TimeCalculator = TimeCalculator(),
                                          val messagesApi: MessagesApi) extends Controller with I18nSupport {
   def index = Action {
     Ok(views.html.index("Your new application is ready."))
@@ -24,9 +25,11 @@ class UserSubmissionController @Inject()(submissionRepository: PostgresUserSubmi
   }
 
   def data = Action {
-    val storySubmissions = submissionRepository.getAll(UserSubmission.STORY)
-    val bugSubmissions = submissionRepository.getAll(UserSubmission.BUG)
-    val meetingSubmissions = submissionRepository.getAll(UserSubmission.MEETING)
+    val today = new DateTime()
+    val submissions = submissionRepository.getAllFromDateRange(timeCalculator.getStartOfWeek(today), timeCalculator.getEndOfWeek(today))
+    val storySubmissions = submissions.filter(submission => submission.isStory)
+    val bugSubmissions = submissions.filter(submission => submission.isBug)
+    val meetingSubmissions = submissions.filter(submission => submission.isMeeting)
 
     Ok(views.html.data("Data")(storySubmissions)(bugSubmissions)(meetingSubmissions))
   }
