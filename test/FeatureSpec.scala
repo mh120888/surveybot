@@ -97,19 +97,18 @@ class FeatureSpec extends Specification {
   }
 
   "GET /data" should {
-    "returns a response of 200 and displays submission data" in new WithApplication{
+    "return a response of 200 and include submission data" in new WithApplication{
       SlackPostData.setTestSlackToken("ABCDEFG")
 
       val validSubmission = "MEETING 4"
       route(FakeRequest(POST, "/survey")
         .withFormUrlEncodedBody(("token", "ABCDEFG"),
-                                ("text", validSubmission),
+                                ("text", "STORY TSF-489 5 50%"),
                                 ("user_name", "Matt")))
 
       val result = route(FakeRequest(GET, "/data")).get
 
       status(result) must equalTo(OK)
-      contentAsString(result) must contain (validSubmission)
     }
   }
 

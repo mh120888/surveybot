@@ -12,6 +12,12 @@ case class PostgresUserSubmissionRepository() extends UserSubmissionRepository {
     SQL("select " + allAttributes + " from submissions").as(userSubmission *)
   }
 
+  def getAll(activity: String): List[UserSubmission] = {
+    DB.withConnection { implicit c =>
+      SQL("select " + allAttributes + s" from submissions WHERE user_response LIKE '${activity}%'").as(userSubmission *)
+    }
+  }
+
   def create(userSubmission: UserSubmission): Option[Long] = {
     DB.withConnection { implicit c =>
       SQL(s"""
@@ -24,7 +30,7 @@ case class PostgresUserSubmissionRepository() extends UserSubmissionRepository {
     get[Long]("id") ~
     get[String]("user_response") ~
     get[String]("user_name") map {
-      case id ~ user_response ~ user_name => UserSubmission(Some(id), user_response, user_name)
+      case id ~ user_response ~ user_name => UserSubmission(id = Some(id), text = user_response, username = user_name)
     }
   }
 }

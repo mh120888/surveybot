@@ -1,10 +1,28 @@
 package models
 
-case class UserSubmission(id: Option[Long] = None, text: String, username: String) extends Validatable {
+import decorators.UserSubmissionDecorator
+import org.joda.time.DateTime
+
+case class UserSubmission(id: Option[Long] = None, createdAt: DateTime = new DateTime(), text: String = "", username: String = "") extends Validatable with UserSubmissionDecorator {
 
   private val activityType: String = text.toUpperCase().split(" ").head
-
   private val numberOfRequiredParts: Int = if (isMeeting) 2 else 4
+
+  def isStory: Boolean = {
+    isType(UserSubmission.STORY)
+  }
+
+  def isBug: Boolean = {
+    isType(UserSubmission.BUG)
+  }
+
+  def isMeeting: Boolean = {
+    isType(UserSubmission.MEETING)
+  }
+
+  private def isType(typeIdentifier: String) = {
+    activityType == typeIdentifier
+  }
 
   private val requiredForActivity: String = {
     if (isMeeting) {
@@ -26,12 +44,8 @@ case class UserSubmission(id: Option[Long] = None, text: String, username: Strin
     parts.length == numberOfRequiredParts
   }
 
-  private def isMeeting: Boolean = {
-   activityType == UserSubmission.MEETING
-  }
-
   private def isStoryOrBug: Boolean = {
-    activityType == UserSubmission.BUG || activityType == UserSubmission.STORY
+    isStory || isBug
   }
 
   override val validations: Seq[Validation] = List(

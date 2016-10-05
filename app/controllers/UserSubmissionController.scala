@@ -24,8 +24,11 @@ class UserSubmissionController @Inject()(submissionRepository: PostgresUserSubmi
   }
 
   def data = Action {
-    val submissions = submissionRepository.getAll
-    Ok(views.html.data("Data")(submissions))
+    val storySubmissions = submissionRepository.getAll(UserSubmission.STORY)
+    val bugSubmissions = submissionRepository.getAll(UserSubmission.BUG)
+    val meetingSubmissions = submissionRepository.getAll(UserSubmission.MEETING)
+
+    Ok(views.html.data("Data")(storySubmissions)(bugSubmissions)(meetingSubmissions))
   }
 
   private def requestBodyAsJson(request: Request[AnyContent]): JsValue = {
