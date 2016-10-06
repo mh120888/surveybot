@@ -2,12 +2,13 @@ package controllers
 
 import com.google.inject.Inject
 import models._
+import org.joda.time.DateTime
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json._
 import play.api.mvc._
 
-
 class UserSubmissionController @Inject()(submissionRepository: PostgresUserSubmissionRepository = PostgresUserSubmissionRepository(),
+                                         timeCalculator: TimeCalculator = TimeCalculator(),
                                          val messagesApi: MessagesApi) extends Controller with I18nSupport {
   def index = Action {
     Ok(views.html.index("Your new application is ready."))
@@ -24,11 +25,23 @@ class UserSubmissionController @Inject()(submissionRepository: PostgresUserSubmi
   }
 
   def data = Action {
-    val storySubmissions = submissionRepository.getAll(UserSubmission.STORY)
-    val bugSubmissions = submissionRepository.getAll(UserSubmission.BUG)
-    val meetingSubmissions = submissionRepository.getAll(UserSubmission.MEETING)
+    val today = new DateTime()
+    val startDate = timeCalculator.getStartOfWeek(today)
+    val endDate = timeCalculator.getEndOfWeek(today)
+    val submissions = submissionRepository.getAllFromDateRange(startDate, endDate)
+    val storySubmissions = submissions.filter(submission => submission.isStory)
+    val bugSubmissions = submissions.filter(submission => submission.isBug)
+    val meetingSubmissions = submissions.filter(submission => submission.isMeeting)
 
-    Ok(views.html.data("Data")(storySubmissions)(bugSubmissions)(meetingSubmissions))
+    Ok(views.html.data(s"Submissions from ${startDate.toString("MM/d/yyyy")} to ${endDate.toString("MM/d/yyyy")}")(storySubmissions)(bugSubmissions)(meetingSubmissions))
+  }
+
+  def allData = Action {
+    val submissions = submissionRepository.getAll
+    val storySubmissions = submissions.filter(submission => submission.isStory)
+    val bugSubmissions = submissions.filter(submission => submission.isBug)
+    val meetingSubmissions = submissions.filter(submission => submission.isMeeting)
+    Ok(views.html.data("All Submissions")(storySubmissions)(bugSubmissions)(meetingSubmissions))
   }
 
   private def requestBodyAsJson(request: Request[AnyContent]): JsValue = {
