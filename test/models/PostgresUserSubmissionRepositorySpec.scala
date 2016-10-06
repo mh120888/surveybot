@@ -22,10 +22,12 @@ class PostgresUserSubmissionRepositorySpec extends Specification {
       DB.withConnection { implicit c =>
         SQL("TRUNCATE table submissions").execute();
       }
-      PostgresUserSubmissionRepository().create(UserSubmission())
+      val twoYearsAgo = new DateTime().minusYears(2)
+      PostgresUserSubmissionRepository().create(UserSubmission(createdAt = twoYearsAgo))
       var result: List[UserSubmission] = PostgresUserSubmissionRepository().getAllFromDateRange(new DateTime().minusYears(5), new DateTime)
 
       result.length must equalTo(1)
+      result.head.createdAt.equals(twoYearsAgo) must equalTo(true)
     }
 
     "#getAllFromDateRange() returns no records from specified date range" in new WithApplication() {
@@ -52,7 +54,7 @@ class PostgresUserSubmissionRepositorySpec extends Specification {
       DB.withConnection { implicit c =>
         SQL(
           s"""
-           INSERT INTO submissions(user_response, user_name) VALUES ('STORY TSF-489 5 50%', 'bob')
+           INSERT INTO submissions(created_at, user_response, user_name) VALUES ('2016-10-07T11:39:50.640-07:00', 'STORY TSF-489 5 50%', 'bob')
           """).executeInsert();
       }
 

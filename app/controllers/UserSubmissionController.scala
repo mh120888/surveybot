@@ -26,12 +26,22 @@ class UserSubmissionController @Inject()(submissionRepository: PostgresUserSubmi
 
   def data = Action {
     val today = new DateTime()
-    val submissions = submissionRepository.getAllFromDateRange(timeCalculator.getStartOfWeek(today), timeCalculator.getEndOfWeek(today))
+    val startDate = timeCalculator.getStartOfWeek(today)
+    val endDate = timeCalculator.getEndOfWeek(today)
+    val submissions = submissionRepository.getAllFromDateRange(startDate, endDate)
     val storySubmissions = submissions.filter(submission => submission.isStory)
     val bugSubmissions = submissions.filter(submission => submission.isBug)
     val meetingSubmissions = submissions.filter(submission => submission.isMeeting)
 
-    Ok(views.html.data("Data")(storySubmissions)(bugSubmissions)(meetingSubmissions))
+    Ok(views.html.data(s"Submissions from ${startDate.toString("MM/d/yyyy")} to ${endDate.toString("MM/d/yyyy")}")(storySubmissions)(bugSubmissions)(meetingSubmissions))
+  }
+
+  def allData = Action {
+    val submissions = submissionRepository.getAll
+    val storySubmissions = submissions.filter(submission => submission.isStory)
+    val bugSubmissions = submissions.filter(submission => submission.isBug)
+    val meetingSubmissions = submissions.filter(submission => submission.isMeeting)
+    Ok(views.html.data("All Submissions")(storySubmissions)(bugSubmissions)(meetingSubmissions))
   }
 
   private def requestBodyAsJson(request: Request[AnyContent]): JsValue = {
