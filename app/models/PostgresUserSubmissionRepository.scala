@@ -10,18 +10,12 @@ case class PostgresUserSubmissionRepository() extends UserSubmissionRepository {
   val allAttributes = "id, created_at, user_response, user_name"
 
   def getAll: List[UserSubmission] = DB.withConnection { implicit c =>
-    SQL("select " + allAttributes + " from submissions").as(userSubmission *)
-  }
-
-  def getAll(activity: String): List[UserSubmission] = {
-    DB.withConnection { implicit c =>
-      SQL("select " + allAttributes + s" from submissions WHERE user_response LIKE '${activity}%'").as(userSubmission *)
-    }
+    SQL("select " + allAttributes + " from submissions ORDER BY created_at").as(userSubmission *)
   }
 
   def getAllFromDateRange(startDate: DateTime, endDate: DateTime): List[UserSubmission] = {
     DB.withConnection { implicit c =>
-      SQL("select " + allAttributes + s" from submissions WHERE created_at between '${startDate}' and '${endDate}'").as(userSubmission *)
+      SQL("select " + allAttributes + s" from submissions WHERE created_at between '${startDate}' and '${endDate}' ORDER BY created_at").as(userSubmission *)
     }
   }
 

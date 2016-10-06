@@ -21,13 +21,17 @@ class PostgresUserSubmissionRepositorySpec extends Specification {
     "#getAllFromDateRange() returns all records from specified date range" in new WithApplication() {
       DB.withConnection { implicit c =>
         SQL("TRUNCATE table submissions").execute();
+        SQL(
+          s"""
+             INSERT INTO submissions(created_at, user_response, user_name) VALUES ('2016-6-06T11:39:50.640-07:00', 'STORY 10 4 15%', 'fakebob');
+             INSERT INTO submissions(created_at, user_response, user_name) VALUES ('2016-6-08T11:39:50.640-07:00', 'BUG 30 2 20%', 'malina');
+             INSERT INTO submissions(created_at, user_response, user_name) VALUES ('2015-6-07T11:39:50.640-07:00', 'MEETING 3', 'fakeangus');
+          """).executeInsert();
       }
-      val twoYearsAgo = new DateTime().minusYears(2)
-      PostgresUserSubmissionRepository().create(UserSubmission(createdAt = twoYearsAgo))
       var result: List[UserSubmission] = PostgresUserSubmissionRepository().getAllFromDateRange(new DateTime().minusYears(5), new DateTime)
 
-      result.length must equalTo(1)
-      result.head.createdAt.equals(twoYearsAgo) must equalTo(true)
+      result.length must equalTo(3)
+      result.last.username must equalTo("malina")
     }
 
     "#getAllFromDateRange() returns no records from specified date range" in new WithApplication() {
@@ -36,31 +40,21 @@ class PostgresUserSubmissionRepositorySpec extends Specification {
       result.length must equalTo(0)
     }
 
-    "#getAll() does not return records that do not match the specified type" in new WithApplication() {
-      val initialCount = PostgresUserSubmissionRepository().getAll("STORY").length
+    "#getAll returns all records, ordered from oldest to newest" in new WithApplication() {
       DB.withConnection { implicit c =>
+        SQL("TRUNCATE table submissions").execute();
         SQL(
           s"""
-           INSERT INTO submissions(user_response, user_name) VALUES ('BUG TSF-100 3 20%', 'bob')
+             INSERT INTO submissions(created_at, user_response, user_name) VALUES ('2016-6-06T11:39:50.640-07:00', 'STORY 10 4 15%', 'fakebob');
+             INSERT INTO submissions(created_at, user_response, user_name) VALUES ('2016-6-08T11:39:50.640-07:00', 'BUG 30 2 20%', 'malina');
+             INSERT INTO submissions(created_at, user_response, user_name) VALUES ('2005-6-07T11:39:50.640-07:00', 'MEETING 3', 'fakeangus');
           """).executeInsert();
       }
 
-      val result = PostgresUserSubmissionRepository().getAll("STORY")
-      result.length must equalTo(initialCount)
-    }
-
-    "#getAll() returns all records of the specified type" in new WithApplication() {
-      val initialCount = PostgresUserSubmissionRepository().getAll("STORY").length
-      DB.withConnection { implicit c =>
-        SQL(
-          s"""
-          INSERT INTO submissions(created_at, user_response, user_name) VALUES ('2016-10-07T11:39:50.640-07:00', 'STORY TSF-489 5 50%', 'bob')
-          """).executeInsert();
-      }
-
-      val result = PostgresUserSubmissionRepository().getAll("STORY")
-      result.length must equalTo(initialCount + 1)
-      result.last.isStory must equalTo(true)
+      val result = PostgresUserSubmissionRepository().getAll
+      result.length must equalTo(3)
+      result.last.username must equalTo("malina")
     }
   }
 }
+
