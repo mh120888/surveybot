@@ -14,7 +14,7 @@ import play.api.test._
 class UserSubmissionControllerSpec extends Specification with Mockito {
 
   "#data" should {
-    "return a response of 200 and displays submission data" in {
+    "return a response of 200 and display submission data" in {
       val fakeRequest = FakeRequest(GET, "/does-not-matter")
       val mockSubmissionRepository = mock[PostgresUserSubmissionRepository]
       val mockStory = mock[UserSubmission]
@@ -37,7 +37,7 @@ class UserSubmissionControllerSpec extends Specification with Mockito {
         allSubmissionsInRange.filter(submission => submission.isMeeting),
         statsGenerator)
 
-      val result = new UserSubmissionController(timeCalculator = mockCalculator, submissionRepository = mockSubmissionRepository, messagesApi = mock[MessagesApi]).data.apply(fakeRequest)
+      val result = new UserSubmissionController(timeCalculator = mockCalculator, submissionRepository = mockSubmissionRepository, messagesApi = mock[MessagesApi]).data(5).apply(fakeRequest)
 
       status(result) must equalTo(OK)
       contentAsString(result) must contain(contentAsString(expectedContent))

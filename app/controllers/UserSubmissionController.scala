@@ -24,8 +24,8 @@ class UserSubmissionController @Inject()(submissionRepository: PostgresUserSubmi
     }
   }
 
-  def data = Action {
-    val today = new DateTime()
+  def data(weeksAgo: Int) = Action {
+    val today = new DateTime().minusWeeks(weeksAgo)
     val startDate = timeCalculator.getStartOfWeek(today)
     val endDate = timeCalculator.getEndOfWeek(today)
     val submissions = submissionRepository.getAllFromDateRange(startDate, endDate)

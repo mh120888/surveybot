@@ -1,18 +1,10 @@
 import models._
 import org.joda.time.DateTime
 import org.junit.runner._
-import org.specs2.mutable._
+import org.specs2.mutable.Specification
 import org.specs2.runner._
 import play.api.test.Helpers._
-import play.api.test._
-import play.api.db._
-import play.api.Play.current
-import anorm._
-import org.specs2.mutable.Specification
-import play.api.test.WithApplication
-import play.api.db._
-import play.api.Play.current
-import anorm._
+import play.api.test.{WithApplication, _}
 
 @RunWith(classOf[JUnitRunner])
 class FeatureSpec extends Specification {
@@ -130,6 +122,60 @@ class FeatureSpec extends Specification {
       val result = route(FakeRequest(POST, "/bogus")).get
 
       status(result) must equalTo(NOT_FOUND)
+    }
+  }
+
+  "GET /data" should {
+   "return a response of 200 and include submission data from current week" in new WithApplication{
+      PostgresUserSubmissionRepository().create(UserSubmission(createdAt = new DateTime(1999, 1, 1, 0, 0), text = "STORY XYZ 5 50%"))
+      PostgresUserSubmissionRepository().create(UserSubmission(createdAt = new DateTime(), text = "STORY TSF-489 5 50%"))
+      SlackPostData.setTestSlackToken("ABCDEFG")
+
+      val result = route(FakeRequest(GET, "/data")).get
+
+      status(result) must equalTo(OK)
+      contentAsString(result) must contain("TSF-489")
+      contentAsString(result) must not contain "XYZ"
+    }
+
+    "allow a user to navigate to a page that shows the previous week's data" in new WithBrowser {
+      val timeCalculator = TimeCalculator()
+      val currentDate = new DateTime().minusWeeks(2)
+      val startDate = timeCalculator.getStartOfWeek(currentDate).toString("MM/d/yyyy")
+      val endDate = timeCalculator.getEndOfWeek(currentDate).toString("MM/d/yyyy")
+
+      browser.goTo("/data?weeksAgo=1")
+      browser.$("#previous-week").click()
+      browser.url must equalTo("/data?weeksAgo=2")
+      browser.$("h1").getTexts.get(0) must equalTo(s"Submissions from ${startDate} to ${endDate}")
+    }
+  }
+
+  "GET /data?weeksAgo=1" should {
+    "return a response of 200 and include submissions from the previous week" in new WithApplication {
+      PostgresUserSubmissionRepository().create(UserSubmission(createdAt = new DateTime(1999, 1, 1, 0, 0), text = "STORY XYZ 5 50%"))
+      PostgresUserSubmissionRepository().create(UserSubmission(createdAt = new DateTime().minusWeeks(1), text = "STORY TSF-500 5 50%"))
+      SlackPostData.setTestSlackToken("ABCDEFG")
+
+      val result = route(FakeRequest(GET, "/data?weeksAgo=1")).get
+
+      status(result) must equalTo(OK)
+      contentAsString(result) must contain("TSF-500")
+      contentAsString(result) must not contain "XYZ"
+    }
+  }
+
+  "GET /all_data" should {
+    "return a response of 200 and include all submission data" in new WithApplication{
+      PostgresUserSubmissionRepository().create(UserSubmission(createdAt = new DateTime(1999, 1, 1, 0, 0), text = "STORY XYZ 5 50%"))
+      PostgresUserSubmissionRepository().create(UserSubmission(createdAt = new DateTime(), text = "STORY TSF-489 5 50%"))
+      SlackPostData.setTestSlackToken("ABCDEFG")
+
+      val result = route(FakeRequest(GET, "/all_data")).get
+
+      status(result) must equalTo(OK)
+      contentAsString(result) must contain("TSF-489")
+      contentAsString(result) must contain("XYZ")
     }
   }
 

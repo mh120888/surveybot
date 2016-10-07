@@ -5,7 +5,7 @@
 # Home page
 GET     /                                               controllers.UserSubmissionController.index
 POST    /survey                                         controllers.UserSubmissionController.survey
-GET     /data                                           controllers.UserSubmissionController.data
+GET     /data                                           controllers.UserSubmissionController.data(weeksAgo: Int ?= 0)
 GET     /all_data                                       controllers.UserSubmissionController.allData
 GET     /dashboard                                      controllers.SurveyRespondentController.dashboard
 POST    /survey_respondents/:id/delete                  controllers.SurveyRespondentController.deleteSurveyRespondent(id: Long)
