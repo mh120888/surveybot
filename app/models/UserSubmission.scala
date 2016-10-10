@@ -20,6 +20,16 @@ case class UserSubmission(id: Option[Long] = None, createdAt: DateTime = new Dat
     isType(UserSubmission.MEETING)
   }
 
+  def getTotalTime: Int = {
+    val index = if (isMeeting) 1 else 2
+
+    try {
+      text.split(" ")(index).toInt
+    } catch {
+      case e: Exception => 0
+    }
+  }
+
   private def isType(typeIdentifier: String) = {
     activityType == typeIdentifier
   }

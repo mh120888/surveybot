@@ -7,24 +7,36 @@
    padding: .5em;
    display: inline-block;
    text-align: left;
+   color: #474b50;
  }
 
  h2 {
    margin: 0 auto .25em;
  }
 
- table, tbody, tr, td {
+ tbody, tr, td {
    background: #FFF;
-   display: block;
- }
-
- table {
-   margin-bottom: 2em;
-   background: #666;
  }
 
  th {
-   display: none;
+   background: #b0b7bf;
+   padding: .5em;
+   text-align: left;
+ }
+
+ .activity th {
+    display: none;
+ }
+
+ .activity tbody, .activity tr, .activity td {
+    display: block;
+ }
+
+ table {
+   border: none;
+   border-spacing: 1px;
+   margin-bottom: 2em;
+   background: #666;
  }
 
  td {
@@ -32,7 +44,7 @@
    background: #EEE;
  }
 
- td:before {
+ .activity td:before {
    content: attr(data-label);
    padding-right: .5em;
  }
@@ -41,27 +53,57 @@
    background: #DEDEDE;
  }
 
- @media (min-width: 650px) {
-   table {
-     display: table;
-   }
+.overall td {
+  min-width: 80px;
+}
 
-   tr {
+.overall td:first-child {
+   background: #b0b7bf;
+   font-weight: 700;
+}
+
+.overall tr:last-child td {
+    position: relative;
+}
+
+.overall tr:last-child td:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #4d5258;
+    z-index: 10;
+    transform: translate(0, -50%);
+}
+
+@media (min-width: 650px) {
+    .activity tbody {
+      display: table-row-group;
+    }
+
+    .activity tr {
+      display: table-row;
+    }
+
+    .activity td {
+      display: table-cell;
+    }
+
+   .activity tr {
      display: table-row;
    }
 
-   th {
-     display: table-cell;
-     background: #CCC;
-     padding: .5em;
-     text-align: left;
-   }
-
-   td {
+   .activity th {
      display: table-cell;
    }
 
-   td:before {
+   .activity td {
+     display: table-cell;
+   }
+
+   .activity td:before {
      display: none;
    }
- }
+}

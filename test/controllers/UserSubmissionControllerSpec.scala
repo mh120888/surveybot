@@ -27,14 +27,15 @@ class UserSubmissionControllerSpec extends Specification with Mockito {
       val startDate = new DateTime()
       mockCalculator.getStartOfWeek(any[DateTime]) returns startDate
       mockCalculator.getEndOfWeek(any[DateTime]) returns startDate
-
       val allSubmissionsInRange = List(mockStory, mockBug, mockMeeting)
       mockSubmissionRepository.getAllFromDateRange(any[DateTime], any[DateTime]) returns allSubmissionsInRange
+      val statsGenerator = StatsGenerator(allSubmissionsInRange)
 
       val expectedContent = views.html.data.render(s"Submissions from ${startDate.toString("MM/d/yyyy")} to ${startDate.toString("MM/d/yyyy")}",
         allSubmissionsInRange.filter(submission => submission.isStory),
         allSubmissionsInRange.filter(submission => submission.isBug),
-        allSubmissionsInRange.filter(submission => submission.isMeeting))
+        allSubmissionsInRange.filter(submission => submission.isMeeting),
+        statsGenerator)
 
       val result = new UserSubmissionController(timeCalculator = mockCalculator, submissionRepository = mockSubmissionRepository, messagesApi = mock[MessagesApi]).data.apply(fakeRequest)
 
@@ -53,14 +54,15 @@ class UserSubmissionControllerSpec extends Specification with Mockito {
       mockBug.isBug returns true
       val mockMeeting = mock[UserSubmission]
       mockMeeting.isMeeting returns true
-
       val allSubmissions = List(mockStory, mockBug, mockMeeting)
       mockSubmissionRepository.getAll returns allSubmissions
+      val statsGenerator = StatsGenerator(allSubmissions)
 
       val expectedContent = views.html.data.render("All Submissions",
         allSubmissions.filter(submission => submission.isStory),
         allSubmissions.filter(submission => submission.isBug),
-        allSubmissions.filter(submission => submission.isMeeting))
+        allSubmissions.filter(submission => submission.isMeeting),
+        statsGenerator)
 
       val result = new UserSubmissionController(submissionRepository = mockSubmissionRepository, messagesApi = mock[MessagesApi]).allData.apply(fakeRequest)
 
