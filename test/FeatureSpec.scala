@@ -5,9 +5,46 @@ import org.specs2.mutable._
 import org.specs2.runner._
 import play.api.test.Helpers._
 import play.api.test._
+import play.api.db._
+import play.api.Play.current
+import anorm._
+import org.specs2.mutable.Specification
+import play.api.test.WithApplication
+import play.api.db._
+import play.api.Play.current
+import anorm._
 
 @RunWith(classOf[JUnitRunner])
 class FeatureSpec extends Specification {
+
+  "GET /data" should {
+    "return a response of 200 and include submission data from current week" in new WithApplication{
+      PostgresUserSubmissionRepository().create(UserSubmission(createdAt = new DateTime(1999, 1, 1, 0, 0), text = "STORY XYZ 4 50%"))
+      PostgresUserSubmissionRepository().create(UserSubmission(createdAt = new DateTime(), text = "STORY TSF-489 5 50%"))
+      SlackPostData.setTestSlackToken("ABCDEFG")
+
+      val result = route(FakeRequest(GET, "/data")).get
+
+      status(result) must equalTo(OK)
+      contentAsString(result) must contain("TSF-489")
+      contentAsString(result) must contain("Total Time: 5")
+      contentAsString(result) must not contain "XYZ"
+    }
+  }
+
+  "GET /all_data" should {
+    "return a response of 200 and include all submission data" in new WithApplication{
+      PostgresUserSubmissionRepository().create(UserSubmission(createdAt = new DateTime(1999, 1, 1, 0, 0), text = "STORY XYZ 5 50%"))
+      PostgresUserSubmissionRepository().create(UserSubmission(createdAt = new DateTime(), text = "STORY TSF-489 5 50%"))
+      SlackPostData.setTestSlackToken("ABCDEFG")
+
+      val result = route(FakeRequest(GET, "/all_data")).get
+
+      status(result) must equalTo(OK)
+      contentAsString(result) must contain("TSF-489")
+      contentAsString(result) must contain("XYZ")
+    }
+  }
 
   "POST /survey" should {
 
@@ -16,8 +53,8 @@ class FeatureSpec extends Specification {
 
       val result = route(FakeRequest(POST, "/survey")
         .withFormUrlEncodedBody(("token", "ABCDEFG"),
-                                ("text", "STORY TSF-489 5 20%"),
-                                ("user_name", "Matt"))).get
+          ("text", "STORY TSF-489 5 20%"),
+          ("user_name", "Matt"))).get
 
       status(result) must equalTo(OK)
       contentAsString(result) must contain ("Success!")
@@ -94,34 +131,6 @@ class FeatureSpec extends Specification {
       val result = route(FakeRequest(POST, "/bogus")).get
 
       status(result) must equalTo(NOT_FOUND)
-    }
-  }
-
-  "GET /data" should {
-   "return a response of 200 and include submission data from current week" in new WithApplication{
-      PostgresUserSubmissionRepository().create(UserSubmission(createdAt = new DateTime(1999, 1, 1, 0, 0), text = "STORY XYZ 5 50%"))
-      PostgresUserSubmissionRepository().create(UserSubmission(createdAt = new DateTime(), text = "STORY TSF-489 5 50%"))
-      SlackPostData.setTestSlackToken("ABCDEFG")
-
-      val result = route(FakeRequest(GET, "/data")).get
-
-      status(result) must equalTo(OK)
-      contentAsString(result) must contain("TSF-489")
-      contentAsString(result) must not contain "XYZ"
-    }
-  }
-
-  "GET /all_data" should {
-    "return a response of 200 and include all submission data" in new WithApplication{
-      PostgresUserSubmissionRepository().create(UserSubmission(createdAt = new DateTime(1999, 1, 1, 0, 0), text = "STORY XYZ 5 50%"))
-      PostgresUserSubmissionRepository().create(UserSubmission(createdAt = new DateTime(), text = "STORY TSF-489 5 50%"))
-      SlackPostData.setTestSlackToken("ABCDEFG")
-
-      val result = route(FakeRequest(GET, "/all_data")).get
-
-      status(result) must equalTo(OK)
-      contentAsString(result) must contain("TSF-489")
-      contentAsString(result) must contain("XYZ")
     }
   }
 

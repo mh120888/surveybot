@@ -1,4 +1,4 @@
-@(title: String)(stories: List[UserSubmission])(bugs: List[UserSubmission])(meetings: List[UserSubmission])
+@(title: String)(stories: List[UserSubmission])(bugs: List[UserSubmission])(meetings: List[UserSubmission])(statsGenerator: StatsGenerator)
 
 <!DOCTYPE html>
 
@@ -66,5 +66,9 @@
         </tr>
         }
     </table>
+    <p>Total Time: @statsGenerator.getTotalTime</p>
+    <p>% Story Time: @statsGenerator.getPercentageForStory</p>
+    <p>% Bug Time: @statsGenerator.getPercentageForBug</p>
+    <p>% Meeting Time: @statsGenerator.getPercentageForMeeting</p>
     </body>
 </html>
