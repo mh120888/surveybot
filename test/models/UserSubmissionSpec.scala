@@ -79,6 +79,24 @@ class UserSubmissionSpec extends Specification {
       userSubmission.isMeeting must equalTo(true)
     }
 
+    "#getTotalTime returns time for a bug submission" in {
+      val userSubmission = UserSubmission(text = "BUG ABC-10 5 10%", username = "Bob")
+
+      userSubmission.getTotalTime must equalTo(5)
+    }
+
+    "#getTotalTime returns time for a meeting submission" in {
+      val userSubmission = UserSubmission(text = "Meeting 2", username = "Bob")
+
+      userSubmission.getTotalTime must equalTo(2)
+    }
+
+    "#getTotalTime returns 0 for a non-integer time" in {
+      val userSubmission = UserSubmission(text = "Meeting hello", username = "Bob")
+
+      userSubmission.getTotalTime must equalTo(0)
+    }
+
     "#showDate returns a properly formatted date" in {
       val currentDate = new DateTime()
       val userSubmission = UserSubmission(text = "STORY TSF-44 5 50%", username = "Bob", createdAt = currentDate)
