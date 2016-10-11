@@ -32,6 +32,10 @@
         </tr>
         }
     </table>
+    <div class='stats'>
+        <p>Average total time: <span>@statsGenerator.getAverageTotalTime(stories) hours</span></p>
+        <p>Average percentage of time spent trying to understand code: <span>@statsGenerator.getAverageTimeUnderstandingCode(stories)%</span></p>
+    </div>
     <h2>Bugs</h2>
     <table class='activity'>
         <tr>
@@ -51,6 +55,10 @@
         </tr>
         }
     </table>
+    <div class='stats'>
+        <p>Average total time: <span>@statsGenerator.getAverageTotalTime(bugs) hours</span></p>
+        <p>Average percentage of time spent trying to understand code: <span>@statsGenerator.getAverageTimeUnderstandingCode(bugs)%</span></p>
+    </div>
     <h2>Meetings</h2>
     <table class='activity'>
         <tr>
@@ -66,6 +74,9 @@
         </tr>
         }
     </table>
+    <div class='stats'>
+        <p>Average time spent on meetings: <span>@statsGenerator.getAverageTotalTime(meetings) hours</span></p>
+    </div>
     <h2>Breakdown by Activity Type</h2>
     <table class='overall'>
         <tr>
@@ -75,22 +86,22 @@
         </tr>
         <tr>
             <td>Story</td>
-            <td>@statsGenerator.getTotal(stories)</td>
+            <td>@statsGenerator.getTotalTime(stories)</td>
             <td>@statsGenerator.showPercentage(stories)</td>
         </tr>
         <tr>
             <td>Bug</td>
-            <td>@statsGenerator.getTotal(bugs)</td>
+            <td>@statsGenerator.getTotalTime(bugs)</td>
             <td>@statsGenerator.showPercentage(bugs)</td>
          </tr>
          <tr>
             <td>Meeting</td>
-            <td>@statsGenerator.getTotal(meetings)</td>
+            <td>@statsGenerator.getTotalTime(meetings)</td>
             <td>@statsGenerator.showPercentage(meetings)</td>
         </tr>
         <tr>
             <td>Total</td>
-            <td>@statsGenerator.getTotal()</td>
+            <td>@statsGenerator.getTotalTime()</td>
             <td>100%</td>
         </tr>
     </table>
