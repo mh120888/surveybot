@@ -7,66 +7,47 @@ import org.specs2.runner._
 
 @RunWith(classOf[JUnitRunner])
 class StatsGeneratorSpec extends Specification {
-  "#getTotalTime" should {
+
+  "#getTotal" should {
     "return total hours for all activities" in {
-      val userSubmissions = List(UserSubmission(text = "MEETING 2"), UserSubmission(), UserSubmission())
-      val result = StatsGenerator(userSubmissions).getTotalTime
+      val userSubmissions = List(UserSubmission(text = "MEETING 2"), UserSubmission(text = "BUG ABC-10 5 10%"), UserSubmission(text = "BUG XYZ-8 3 10%"))
 
-      result must equalTo(2)
+      val result = StatsGenerator(userSubmissions).getTotal()
+
+      result must equalTo(10)
     }
   }
 
-  "#getTotalTimeForMeeting" should {
-    "return total hours for meeting" in {
-      val userSubmissions = List(UserSubmission(text = "MEETING 2"), UserSubmission(), UserSubmission())
-      val result = StatsGenerator(userSubmissions).getTotalTimeForMeeting
-
-      result must equalTo(2)
-    }
-  }
-
-  "#getTotalTimeForStory" should {
-    "return total hours for story" in {
-      val userSubmissions = List(UserSubmission(text = "MEETING 2"), UserSubmission(text = "STORY ABC-10 5 10%"), UserSubmission())
-      val result = StatsGenerator(userSubmissions).getTotalTimeForStory
-
-      result must equalTo(5)
-    }
-  }
-
-  "#getTotalTimeForBug" should {
-    "return total hours for bug" in {
-      val userSubmissions = List(UserSubmission(text = "MEETING 2"), UserSubmission(text = "BUG ABC-10 5 10%"), UserSubmission(text = "BUG XYZ-8 7 10%"))
-      val result = StatsGenerator(userSubmissions).getTotalTimeForBug
-
-      result must equalTo(12)
-    }
-  }
-
-  "#getPercentageForMeeting" should {
+  "#getPercentage" should {
     "return percentage of meeting" in {
       val userSubmissions = List(UserSubmission(text = "MEETING 2"), UserSubmission(text = "BUG ABC-10 5 10%"), UserSubmission(text = "BUG XYZ-8 3 10%"))
-      val result = StatsGenerator(userSubmissions).getPercentageForMeeting
+      val meetingSubmissions = userSubmissions.filter(submission => submission.isMeeting)
+
+      val result = StatsGenerator(userSubmissions).getPercentage(meetingSubmissions)
 
       result must equalTo(20.toFloat)
     }
   }
 
-  "#getPercentageForStory" should {
-    "return percentage of story" in {
-      val userSubmissions = List(UserSubmission(text = "MEETING 2"), UserSubmission(text = "STORY ABC-10 5 10%"), UserSubmission(text = "STORY XYZ-8 3 10%"))
-      val result = StatsGenerator(userSubmissions).getPercentageForStory
+  "#showPercentage" should {
+    "return formatted percentage as a string" in {
+      val userSubmissions = List(UserSubmission(text = "MEETING 2"), UserSubmission(text = "BUG ABC-10 5 10%"), UserSubmission(text = "BUG XYZ-8 3 10%"))
+      val meetingSubmissions = userSubmissions.filter(submission => submission.isMeeting)
 
-      result must equalTo(80.toFloat)
+      val result = StatsGenerator(userSubmissions).showPercentage(meetingSubmissions)
+
+      result must equalTo("20%")
     }
   }
 
-  "#getPercentageForBug" should {
-    "return percentage of bug" in {
-      val userSubmissions = List(UserSubmission(text = "MEETING 2"), UserSubmission(text = "BUG ABC-10 5 10%"), UserSubmission(text = "STORY XYZ-8 3 10%"))
-      val result = StatsGenerator(userSubmissions).getPercentageForBug
+  "#getAverageTime" should {
+    "return average of hours spent on activity for story" in {
+      val userSubmissions = List(UserSubmission(text = "STORY ABC-10 5 10%"), UserSubmission(text = "STORY XYZ-8 3 10%"))
+      val storySubmissions = List(UserSubmission(text = "STORY ABC-10 5 10%"), UserSubmission(text = "STORY XYZ-8 3 10%"))
 
-      result must equalTo(50.toFloat)
+      val result = StatsGenerator(userSubmissions).getAverageTime(userSubmissions)
+
+      result must equalTo(4)
     }
   }
 }
