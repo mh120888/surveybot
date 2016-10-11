@@ -15,8 +15,10 @@
     </head>
     <body>
     <h1>@title</h1>
-    <a href="/data?weeksAgo=@{weeksAgo + 1}" id="previous-week">&lt; Previous Week</a>
-    <a href="/data?weeksAgo=@{weeksAgo - 1}" id="next-week">Next Week &gt;</a>
+    <nav>
+        <a href="/data?weeksAgo=@{weeksAgo + 1}" class="previous-week"></a>
+        <a href="/data?weeksAgo=@{weeksAgo - 1}" class="next-week"></a>
+    </nav>
     <h2>Stories</h2>
     <table class='activity'>
       <tr>

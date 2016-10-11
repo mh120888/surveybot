@@ -2,10 +2,32 @@ section {
   margin: 0 auto 2em;
 }
 
-a[href="/data?weeksAgo=-1"] {
-    color: gray;
-    pointer-events: none;
-}
+ h1, nav {
+    display: inline-block;
+    vertical-align: middle;
+ }
+
+ nav a {
+    display: inline-block;
+    width: 2em;
+    height: 2em;
+    background-color: black;
+ }
+
+ .previous-week {
+    border: solid 1em white;
+    border-right: solid 1em black;
+    margin-right: 1em;
+ }
+
+ .next-week {
+    border: solid 1em white;
+    border-left: solid 1em black;
+ }
+
+ .next-week[href="/data?weeksAgo=-1"] {
+    border-left: solid 1em #CCC;
+ }
 
 h2 {
   margin: 0 auto .25em;
