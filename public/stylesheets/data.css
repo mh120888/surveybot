@@ -2,6 +2,11 @@ section {
   margin: 0 auto 2em;
 }
 
+a[href="/data?weeksAgo=-1"] {
+    color: gray;
+    pointer-events: none;
+}
+
 h2 {
   margin: 0 auto .25em;
 }

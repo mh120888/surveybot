@@ -14,6 +14,14 @@ class UserSubmissionController @Inject()(submissionRepository: PostgresUserSubmi
     Ok(views.html.index("Your new application is ready."))
   }
 
+  def challenge = Action { request =>
+    val requestAsJSON = request.body.asJson.get
+    val challenge = (requestAsJSON \ "challenge").get.toString()
+
+    println(challenge)
+    Ok(challenge)
+  }
+
   def survey = Action { request =>
     val result: JsResult[SlackPostData] = requestBodyAsJson(request).validate[SlackPostData]
     result match {
@@ -33,7 +41,7 @@ class UserSubmissionController @Inject()(submissionRepository: PostgresUserSubmi
     val bugSubmissions = submissions.filter(submission => submission.isBug)
     val meetingSubmissions = submissions.filter(submission => submission.isMeeting)
 
-    Ok(views.html.data(s"Submissions from ${startDate.toString("MM/d/yyyy")} to ${endDate.toString("MM/d/yyyy")}")(storySubmissions)(bugSubmissions)(meetingSubmissions)(StatsGenerator(submissions)))
+    Ok(views.html.data(s"Submissions from ${startDate.toString("MM/d/yyyy")} to ${endDate.toString("MM/d/yyyy")}")(weeksAgo)(storySubmissions)(bugSubmissions)(meetingSubmissions)(StatsGenerator(submissions)))
   }
 
   def allData = Action {
@@ -41,7 +49,8 @@ class UserSubmissionController @Inject()(submissionRepository: PostgresUserSubmi
     val storySubmissions = submissions.filter(submission => submission.isStory)
     val bugSubmissions = submissions.filter(submission => submission.isBug)
     val meetingSubmissions = submissions.filter(submission => submission.isMeeting)
-    Ok(views.html.data("All Submissions")(storySubmissions)(bugSubmissions)(meetingSubmissions)(StatsGenerator(submissions)))
+
+    Ok(views.html.data("All Submissions")(0)(storySubmissions)(bugSubmissions)(meetingSubmissions)(StatsGenerator(submissions)))
   }
 
   private def requestBodyAsJson(request: Request[AnyContent]): JsValue = {

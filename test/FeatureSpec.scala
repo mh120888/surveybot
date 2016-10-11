@@ -149,6 +149,18 @@ class FeatureSpec extends Specification {
       browser.url must equalTo("/data?weeksAgo=2")
       browser.$("h1").getTexts.get(0) must equalTo(s"Submissions from ${startDate} to ${endDate}")
     }
+
+    "allow a user to navigate to a page that shows the next week's data" in new WithBrowser {
+      val timeCalculator = TimeCalculator()
+      val currentDate = new DateTime()
+      val startDate = timeCalculator.getStartOfWeek(currentDate).toString("MM/d/yyyy")
+      val endDate = timeCalculator.getEndOfWeek(currentDate).toString("MM/d/yyyy")
+
+      browser.goTo("/data?weeksAgo=1")
+      browser.$("#next-week").click()
+      browser.url must equalTo("/data?weeksAgo=0")
+      browser.$("h1").getTexts.get(0) must equalTo(s"Submissions from ${startDate} to ${endDate}")
+    }
   }
 
   "GET /data?weeksAgo=1" should {
