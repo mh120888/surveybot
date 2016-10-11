@@ -30,6 +30,16 @@ case class UserSubmission(id: Option[Long] = None, createdAt: DateTime = new Dat
     }
   }
 
+  def getTimeUnderstandingCode: Int = {
+    try {
+      val percentageValue = text.split(" ")(3)
+      "%".r.replaceAllIn(percentageValue, "").toInt
+    } catch {
+      case e: NumberFormatException => 0
+    }
+
+  }
+
   private def isType(typeIdentifier: String) = {
     activityType == typeIdentifier
   }
