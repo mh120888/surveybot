@@ -27,7 +27,6 @@ class FeatureSpec extends Specification {
 
       status(result) must equalTo(OK)
       contentAsString(result) must contain("TSF-489")
-      contentAsString(result) must contain("Total Time: 5")
       contentAsString(result) must not contain "XYZ"
     }
   }

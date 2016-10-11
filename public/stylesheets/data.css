@@ -1,5 +1,5 @@
- html {
-     text-align: center;
+html {
+  text-align: center;
  }
 
  body {
@@ -25,17 +25,16 @@
  }
 
  .activity th {
-    display: none;
+   display: none;
  }
 
  .activity tbody, .activity tr, .activity td {
-    display: block;
+   display: block;
  }
 
  table {
    border: none;
    border-spacing: 1px;
-   margin-bottom: 2em;
    background: #666;
  }
 
@@ -53,57 +52,70 @@
    background: #DEDEDE;
  }
 
-.overall td {
-  min-width: 80px;
+ .overall td {
+   min-width: 80px;
 }
 
 .overall td:first-child {
-   background: #b0b7bf;
-   font-weight: 700;
+  background: #b0b7bf;
+  font-weight: 700;
 }
 
 .overall tr:last-child td {
-    position: relative;
+  position: relative;
 }
 
 .overall tr:last-child td:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: #4d5258;
-    z-index: 10;
-    transform: translate(0, -50%);
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #4d5258;
+  z-index: 10;
+  transform: translate(0, -50%);
+}
+
+.stats {
+  margin: 2em auto 2.5em;
+}
+
+.stats p {
+  line-height: 1.5;
+  margin: 0 auto 1em;
+}
+
+.stats p span {
+  font-weight: 700;
 }
 
 @media (min-width: 650px) {
-    .activity tbody {
-      display: table-row-group;
-    }
+  .activity tbody {
+    display: table-row-group;
+  }
 
-    .activity tr {
-      display: table-row;
-    }
+  .activity tr {
+    display: table-row;
+  }
 
-    .activity td {
-      display: table-cell;
-    }
+  .activity td {
+    display: table-cell;
+  }
 
-   .activity tr {
-     display: table-row;
-   }
+  .activity tr {
+    display: table-row;
+ }
 
-   .activity th {
-     display: table-cell;
-   }
+ .activity th {
+   display: table-cell;
+ }
 
-   .activity td {
-     display: table-cell;
-   }
+ .activity td {
+   display: table-cell;
+ }
 
-   .activity td:before {
-     display: none;
-   }
+ .activity td:before {
+   display: none;
+ }
 }
