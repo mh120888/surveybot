@@ -25,4 +25,8 @@ case class StatsGenerator(userSubmissions: List[UserSubmission]) {
     val sum = submissions.map(_.getTimeUnderstandingCode).sum.toFloat
     sum/submissions.length
   }
+
+  def getTotalPercentage: Int = {
+    if (userSubmissions.length == 0) 0 else 100
+  }
 }

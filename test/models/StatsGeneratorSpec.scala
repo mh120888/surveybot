@@ -9,7 +9,7 @@ import org.specs2.runner._
 class StatsGeneratorSpec extends Specification {
 
   "#getTotalTime" should {
-    "return total hours for all activities" in {
+    "returns total hours for all activities" in {
       val userSubmissions = List(UserSubmission(text = "MEETING 2"), UserSubmission(text = "BUG ABC-10 5 10%"), UserSubmission(text = "BUG XYZ-8 3 10%"))
 
       val result = StatsGenerator(userSubmissions).getTotalTime()
@@ -19,7 +19,7 @@ class StatsGeneratorSpec extends Specification {
   }
 
   "#getPercentage" should {
-    "return percentage of meeting" in {
+    "returns percentage of meeting" in {
       val userSubmissions = List(UserSubmission(text = "MEETING 2"), UserSubmission(text = "BUG ABC-10 5 10%"), UserSubmission(text = "BUG XYZ-8 3 10%"))
       val meetingSubmissions = userSubmissions.filter(submission => submission.isMeeting)
 
@@ -30,7 +30,7 @@ class StatsGeneratorSpec extends Specification {
   }
 
   "#showPercentage" should {
-    "return formatted percentage as a string" in {
+    "returns formatted percentage as a string" in {
       val userSubmissions = List(UserSubmission(text = "MEETING 2"), UserSubmission(text = "BUG ABC-10 5 10%"), UserSubmission(text = "BUG XYZ-8 3 10%"))
       val meetingSubmissions = userSubmissions.filter(submission => submission.isMeeting)
 
@@ -41,7 +41,7 @@ class StatsGeneratorSpec extends Specification {
   }
 
   "#getAverageTotalTime" should {
-    "return average of hours spent on activity for story" in {
+    "returns average of hours spent on activity for story" in {
       val userSubmissions = List(UserSubmission(text = "STORY ABC-10 5 10%"), UserSubmission(text = "STORY XYZ-8 3 10%"))
 
       val result = StatsGenerator(userSubmissions).getAverageTotalTime(userSubmissions)
@@ -51,12 +51,26 @@ class StatsGeneratorSpec extends Specification {
   }
 
   "#getAverageTimeUnderstandingCode" should {
-    "return average percentage of time trying to understand the code" in {
+    "returns average percentage of time trying to understand the code" in {
       val userSubmissions = List(UserSubmission(text = "STORY ABC-10 5 20%"), UserSubmission(text = "STORY XYZ-8 3 10%"))
 
       val result = StatsGenerator(userSubmissions).getAverageTimeUnderstandingCode(userSubmissions)
 
       result must equalTo(15)
+    }
+  }
+
+  "#getTotalPercentage" should {
+    "returns 0 if there are no user submissions" in {
+      val result = StatsGenerator(List()).getTotalPercentage
+
+      result must equalTo(0)
+    }
+
+    "returns 100 if there are user submissions" in {
+      val result = StatsGenerator(List(UserSubmission())).getTotalPercentage
+
+      result must equalTo(100)
     }
   }
 }
