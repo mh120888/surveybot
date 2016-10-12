@@ -1,24 +1,66 @@
-
 body {
-    width: 100%;
-    max-width: 600px;
-    margin:  0 auto;
+  display: block;
+  max-width: 60em;
+  margin: 0 auto;
 }
 
 h1 {
-    text-align: center
+  text-align: center
+}
+
+main, .half {
+  display: block;
+  width: 100%;
 }
 
 .half {
-    display: inline-block;
-    width: 49%;
-    vertical-align: top;
+  padding: 1em;
+  border: double 4px;
+  margin: 0 auto 1em;
+}
+
+.half h2 {
+  margin: 0 auto 1em;
+  text-align: center;
+}
+
+.survey-respondents-list li {
+  margin-bottom: .5em;
+}
+
+.survey-respondents-list li:last-child {
+  margin-bottom: 0;
+}
+
+.survey-respondents-list li > * {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.survey-respondents-list li > span {
+  margin-right: .5em;
 }
 
 dd {
-    margin: 0;
+  margin: 0;
 }
 
-.flash p {
-    padding: 1em;
+.flash .success {
+  color: #22a922;
+}
+
+.flash .error {
+  color: #cc0e0e;
+}
+
+@media (min-width: 650px) {
+  main {
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+  }
+
+  .half {
+    margin: 0 1em;
+  }
 }

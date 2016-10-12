@@ -1,16 +1,3 @@
-html {
-  text-align: center;
-}
-
-body {
-  font-family: 'Roboto', Arial, sans-serif;
-  padding: .5em;
-  display: inline-block;
-  text-align: left;
-  color: #474b50;
-  font-size: 3.9vw;
-}
-
 section {
   margin: 0 auto 2em;
 }
