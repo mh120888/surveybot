@@ -41,14 +41,15 @@ class FeatureSpec extends Specification {
 
     "with correct token and text returns a response of 200 and success message" in new WithApplication{
       SlackPostData.setTestSlackToken("ABCDEFG")
+      val validSubmission = "STORY TSF-489 5 20%"
 
       val result = route(FakeRequest(POST, "/survey")
         .withFormUrlEncodedBody(("token", "ABCDEFG"),
-          ("text", "STORY TSF-489 5 20%"),
+          ("text", validSubmission),
           ("user_name", "Matt"))).get
 
       status(result) must equalTo(OK)
-      contentAsString(result) must contain ("Success!")
+      contentAsString(result) must contain (s"${validSubmission} was successfully submitted!")
     }
 
     "with correct token and username, but no text field, returns a response of 200 and an error message" in new WithApplication{
@@ -62,30 +63,33 @@ class FeatureSpec extends Specification {
 
     "with correct token and username, but empty text, returns a response of 200 and a descriptive error message" in new WithApplication{
       SlackPostData.setTestSlackToken("xjdk333")
+      val invalidSubmission = ""
 
-      val result = route(FakeRequest(POST, "/survey").withFormUrlEncodedBody(("token", "xjdk333"), ("user_name", "Matt"), ("text", ""))).get
+      val result = route(FakeRequest(POST, "/survey").withFormUrlEncodedBody(("token", "xjdk333"), ("user_name", "Matt"), ("text", invalidSubmission))).get
 
       status(result) must equalTo(OK)
-      contentAsString(result) must contain ("There was a problem with your submission.")
+      contentAsString(result) must contain (s"There was a problem with your submission: ${invalidSubmission}")
     }
 
     "with correct token and username, but invalid text due to wrong activity type, returns a response of 200 and a descriptive error message" in new WithApplication{
       SlackPostData.setTestSlackToken("xjdk333")
+      val invalidSubmission = "STANDUP 1"
 
-      val result = route(FakeRequest(POST, "/survey").withFormUrlEncodedBody(("token", "xjdk333"), ("user_name", "Matt"), ("text", "STANDUP 1"))).get
+      val result = route(FakeRequest(POST, "/survey").withFormUrlEncodedBody(("token", "xjdk333"), ("user_name", "Matt"), ("text", invalidSubmission))).get
 
       status(result) must equalTo(OK)
-      contentAsString(result) must contain ("There was a problem with your submission.")
+      contentAsString(result) must contain (s"There was a problem with your submission: ${invalidSubmission}")
       contentAsString(result) must contain ("Activity type is required: BUG, STORY, MEETING")
     }
 
     "with correct token and username, but invalid text due to wrong number of parts, returns a response of 200 and a descriptive error message" in new WithApplication{
       SlackPostData.setTestSlackToken("xjdk333")
+      val invalidSubmission = "BUG 1 50%"
 
-      val result = route(FakeRequest(POST, "/survey").withFormUrlEncodedBody(("token", "xjdk333"), ("user_name", "Matt"), ("text", "BUG 1 50%"))).get
+      val result = route(FakeRequest(POST, "/survey").withFormUrlEncodedBody(("token", "xjdk333"), ("user_name", "Matt"), ("text", invalidSubmission))).get
 
       status(result) must equalTo(OK)
-      contentAsString(result) must contain ("There was a problem with your submission.")
+      contentAsString(result) must contain (s"There was a problem with your submission: ${invalidSubmission}")
       contentAsString(result) must contain (UserSubmission.REQUIRED_FOR_STORY_OR_BUG)
     }
 
