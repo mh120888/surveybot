@@ -4,106 +4,118 @@
 
 <html lang="en">
 <head>
-    <title>@title</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
-    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/data.css")">
-    <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
-    <script src="@routes.Assets.versioned("javascripts/hello.js")" type="text/javascript"></script>
-    </head>
-    <body>
-    <h1>@title</h1>
+  <title>@title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
+  <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/data.css")">
+  <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+  <script src="@routes.Assets.versioned("javascripts/hello.js")" type="text/javascript"></script>
+</head>
+<body>
+  <h1>@title</h1>
+  <section>
     <h2>Stories</h2>
     <table class='activity'>
-        <tr>
-            <th>Username</th>
-            <th>Date</th>
-            <th>Activity ID</th>
-            <th>Hours Spent on Activity</th>
-            <th>% of Time Spent Trying to Understand Code</th>
-        </tr>
-        @for(story <- stories) {
-        <tr>
-            <td data-label='Username:'>@story.username</td>
-            <td data-label="Date:">@story.showDate</td>
-            <td data-label="Activity ID:">@story.showActivityID</td>
-            <td data-label="Hours Spent:">@story.showTimeForStoryOrBug</td>
-            <td data-label="% Time Trying to Understand Code:">@story.showPercentage</td>
-        </tr>
-        }
-    </table>
-    <div class='stats'>
-        <p>Average total time: <span>@statsGenerator.getAverageTotalTime(stories) hours</span></p>
-        <p>Average percentage of time spent trying to understand code: <span>@statsGenerator.getAverageTimeUnderstandingCode(stories)%</span></p>
-    </div>
-    <h2>Bugs</h2>
-    <table class='activity'>
-        <tr>
-            <th>Username</th>
-            <th>Date</th>
-            <th>Activity ID</th>
-            <th>Hours Spent on Activity</th>
-            <th>% of Time Spent Trying to Understand Code</th>
-        </tr>
-        @for(bug <- bugs) {
-        <tr>
-            <td data-label='Username:'>@bug.username</td>
-            <td data-label="Date:">@bug.showDate</td>
-            <td data-label="Activity ID:">@bug.showActivityID</td>
-            <td data-label="Hours Spent:">@bug.showTimeForStoryOrBug</td>
-            <td data-label="% Time Trying to Understand Code:">@bug.showPercentage</td>
-        </tr>
-        }
-    </table>
-    <div class='stats'>
-        <p>Average total time: <span>@statsGenerator.getAverageTotalTime(bugs) hours</span></p>
-        <p>Average percentage of time spent trying to understand code: <span>@statsGenerator.getAverageTimeUnderstandingCode(bugs)%</span></p>
-    </div>
-    <h2>Meetings</h2>
-    <table class='activity'>
-        <tr>
-            <th>Username</th>
-            <th>Date</th>
-            <th>Hours Spent on Activity</th>
-        </tr>
-        @for(meeting <- meetings) {
-        <tr>
-            <td data-label='Username:'>@meeting.username</td>
-            <td data-label='Date:'>@meeting.showDate</td>
-            <td data-label='Hours Spent:'>@meeting.showTimeForMeeting</td>
-        </tr>
-        }
-    </table>
-    <div class='stats'>
-        <p>Average time spent on meetings: <span>@statsGenerator.getAverageTotalTime(meetings) hours</span></p>
-    </div>
-    <h2>Breakdown by Activity Type</h2>
-    <table class='overall'>
-        <tr>
-            <th></th>
-            <th>Hours</th>
-            <th>% of Total Time</th>
-        </tr>
-        <tr>
-            <td>Story</td>
-            <td>@statsGenerator.getTotalTime(stories)</td>
-            <td>@statsGenerator.showPercentage(stories)</td>
-        </tr>
-        <tr>
-            <td>Bug</td>
-            <td>@statsGenerator.getTotalTime(bugs)</td>
-            <td>@statsGenerator.showPercentage(bugs)</td>
-         </tr>
-         <tr>
-            <td>Meeting</td>
-            <td>@statsGenerator.getTotalTime(meetings)</td>
-            <td>@statsGenerator.showPercentage(meetings)</td>
-        </tr>
-        <tr>
-            <td>Total</td>
-            <td>@statsGenerator.getTotalTime()</td>
-            <td>100%</td>
-        </tr>
-    </table>
-    </body>
+      <tr>
+        <th>Username</th>
+        <th>Date</th>
+        <th>Activity ID</th>
+        <th>Hours Spent on Activity</th>
+        <th>% of Time Spent Trying to Understand Code</th>
+      </tr>
+      @for(story <- stories) {
+      <tr>
+        <td data-label='Username:'>@story.username</td>
+        <td data-label="Date:">@story.showDate</td>
+        <td data-label="Activity ID:">@story.showActivityID</td>
+        <td data-label="Hours Spent:">@story.showTimeForStoryOrBug</td>
+        <td data-label="% Time Trying to Understand Code:">@story.showPercentage</td>
+      </tr>
+    }
+    <tr class='totals'>
+      <td colspan='3' class='label'>Averages</td>
+      <td data-label='Average Total Time:'>@statsGenerator.getAverageTotalTime(stories) hours</td>
+      <td data-label='Average Time to Understand Code:'>@statsGenerator.getAverageTimeUnderstandingCode(stories)%</td>
+    </tr>
+  </table>
+</section>
+<section>
+  <h2>Bugs</h2>
+  <table class='activity'>
+    <tr>
+      <th>Username</th>
+      <th>Date</th>
+      <th>Activity ID</th>
+      <th>Hours Spent on Activity</th>
+      <th>% of Time Spent Trying to Understand Code</th>
+    </tr>
+    @for(bug <- bugs) {
+    <tr>
+      <td data-label='Username:'>@bug.username</td>
+      <td data-label="Date:">@bug.showDate</td>
+      <td data-label="Activity ID:">@bug.showActivityID</td>
+      <td data-label="Hours Spent:">@bug.showTimeForStoryOrBug</td>
+      <td data-label="% Time Trying to Understand Code:">@bug.showPercentage</td>
+    </tr>
+  }
+  <tr class='totals'>
+    <td colspan='3' class='label'>Averages</td>
+    <td data-label='Average Total Time:'>@statsGenerator.getAverageTotalTime(bugs) hours</td>
+    <td data-label='Average Time to Understand Code:'>@statsGenerator.getAverageTimeUnderstandingCode(bugs)%</td>
+  </tr>
+</table>
+</section>
+<section>
+  <h2>Meetings</h2>
+  <table class='activity'>
+    <tr>
+      <th>Username</th>
+      <th>Date</th>
+      <th>Hours Spent on Activity</th>
+    </tr>
+    @for(meeting <- meetings) {
+    <tr>
+      <td data-label='Username:'>@meeting.username</td>
+      <td data-label='Date:'>@meeting.showDate</td>
+      <td data-label='Hours Spent:'>@meeting.showTimeForMeeting</td>
+    </tr>
+  }
+  <tr class='totals'>
+    <td colspan='2' class='label'>Averages</td>
+    <td data-label='Average Total Time:'>@statsGenerator.getAverageTotalTime(meetings) hours</td>
+  </tr>
+</table>
+</section>
+<section>
+  <h2>Breakdown by Activity Type</h2>
+  <table class='overall'>
+    <tr>
+      <th></th>
+      <th>Total # of Hours</th>
+      <th>% of Total Hours</th>
+    </tr>
+    <tr>
+      <td>Story</td>
+      <td>@statsGenerator.getTotalTime(stories)</td>
+      <td>@statsGenerator.showPercentage(stories)</td>
+    </tr>
+    <tr>
+      <td>Bug</td>
+      <td>@statsGenerator.getTotalTime(bugs)</td>
+      <td>@statsGenerator.showPercentage(bugs)</td>
+    </tr>
+    <tr>
+      <td>Meeting</td>
+      <td>@statsGenerator.getTotalTime(meetings)</td>
+      <td>@statsGenerator.showPercentage(meetings)</td>
+    </tr>
+    <tr class='totals'>
+      <td>Total</td>
+      <td>@statsGenerator.getTotalTime()</td>
+      <td>100%</td>
+    </tr>
+  </table>
+</section>
+</body>
 </html>

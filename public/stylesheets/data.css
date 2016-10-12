@@ -1,59 +1,58 @@
-html {
-  text-align: center;
- }
+section {
+  margin: 0 auto 2em;
+}
 
- body {
-   font-family: Helvetica, Arial, sans-serif;
-   padding: .5em;
-   display: inline-block;
-   text-align: left;
-   color: #474b50;
- }
+h2 {
+  margin: 0 auto .25em;
+}
 
- h2 {
-   margin: 0 auto .25em;
- }
+tbody, tr, td {
+  background: #FFF;
+}
 
- tbody, tr, td {
-   background: #FFF;
- }
+th {
+  background: #b0b7bf;
+  padding: .5em;
+  text-align: left;
+}
 
- th {
-   background: #b0b7bf;
-   padding: .5em;
-   text-align: left;
- }
+.activity th {
+  display: none;
+}
 
- .activity th {
-   display: none;
- }
+.activity tbody, .activity tr, .activity td {
+  display: block;
+}
 
- .activity tbody, .activity tr, .activity td {
-   display: block;
- }
+table {
+  border: none;
+  border-spacing: 1px;
+  background: #666;
+  width: 100%;
+}
 
- table {
-   border: none;
-   border-spacing: 1px;
-   background: #666;
- }
+td {
+  padding: .5em;
+  background: #EEE;
+}
 
- td {
-   padding: .5em;
-   background: #EEE;
- }
+.activity td:before {
+  content: attr(data-label);
+  padding-right: .5em;
+}
 
- .activity td:before {
-   content: attr(data-label);
-   padding-right: .5em;
- }
+.activity td:after {
+  visibility: hidden;
+}
 
- tr:nth-child(odd) td {
-   background: #DEDEDE;
- }
+tr:nth-child(odd) td {
+  background: #DEDEDE;
+}
 
- .overall td {
-   min-width: 80px;
+.activity .label {
+  text-align: right;
+  display: none;
+  font-weight: 700;
 }
 
 .overall td:first-child {
@@ -61,12 +60,13 @@ html {
   font-weight: 700;
 }
 
-.overall tr:last-child td {
+tr:last-child td {
   position: relative;
 }
 
-.overall tr:last-child td:before {
+tr:last-child td:after {
   content: '';
+  display: block;
   position: absolute;
   top: 0;
   left: 0;
@@ -90,7 +90,19 @@ html {
   font-weight: 700;
 }
 
+tr.totals td {
+  background-color: #b0b7bf;
+}
+
 @media (min-width: 650px) {
+  body {
+    font-size: 1em;
+  }
+
+  table {
+    width: auto;
+  }
+
   .activity tbody {
     display: table-row-group;
   }
@@ -105,17 +117,25 @@ html {
 
   .activity tr {
     display: table-row;
- }
+  }
 
- .activity th {
-   display: table-cell;
- }
+  .activity th {
+    display: table-cell;
+  }
 
- .activity td {
-   display: table-cell;
- }
+  .activity td:before {
+    display: none;
+  }
 
- .activity td:before {
-   display: none;
- }
+  .activity td:after {
+    visibility: visible;
+  }
+
+  .overall td {
+    min-width: 80px;
+  }
+
+  .activity .label {
+    display: table-cell;
+  }
 }
