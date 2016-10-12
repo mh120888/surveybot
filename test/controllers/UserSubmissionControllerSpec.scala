@@ -14,7 +14,7 @@ import play.api.test._
 class UserSubmissionControllerSpec extends Specification with Mockito {
 
   "#data" should {
-    "return a response of 200 and displays submission data" in {
+    "return a response of 200 and display submission data" in {
       val fakeRequest = FakeRequest(GET, "/does-not-matter")
       val mockSubmissionRepository = mock[PostgresUserSubmissionRepository]
       val mockStory = mock[UserSubmission]
@@ -31,13 +31,15 @@ class UserSubmissionControllerSpec extends Specification with Mockito {
       mockSubmissionRepository.getAllFromDateRange(any[DateTime], any[DateTime]) returns allSubmissionsInRange
       val statsGenerator = StatsGenerator(allSubmissionsInRange)
 
+      val weeksAgo = 0
       val expectedContent = views.html.data.render(s"Submissions from ${startDate.toString("MM/d/yyyy")} to ${startDate.toString("MM/d/yyyy")}",
+        weeksAgo,
         allSubmissionsInRange.filter(submission => submission.isStory),
         allSubmissionsInRange.filter(submission => submission.isBug),
         allSubmissionsInRange.filter(submission => submission.isMeeting),
         statsGenerator)
 
-      val result = new UserSubmissionController(timeCalculator = mockCalculator, submissionRepository = mockSubmissionRepository, messagesApi = mock[MessagesApi]).data.apply(fakeRequest)
+      val result = new UserSubmissionController(timeCalculator = mockCalculator, submissionRepository = mockSubmissionRepository, messagesApi = mock[MessagesApi]).data(weeksAgo).apply(fakeRequest)
 
       status(result) must equalTo(OK)
       contentAsString(result) must contain(contentAsString(expectedContent))
@@ -59,6 +61,7 @@ class UserSubmissionControllerSpec extends Specification with Mockito {
       val statsGenerator = StatsGenerator(allSubmissions)
 
       val expectedContent = views.html.data.render("All Submissions",
+        0,
         allSubmissions.filter(submission => submission.isStory),
         allSubmissions.filter(submission => submission.isBug),
         allSubmissions.filter(submission => submission.isMeeting),

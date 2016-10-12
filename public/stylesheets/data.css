@@ -1,5 +1,70 @@
+body {
+  background: #f5f5f5;
+}
+
+main {
+  max-width: 60em;
+  margin: 0 auto;
+  background: #FFF;
+  box-shadow: 0 0 20px #CCC;
+  padding: 1.5em;
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5em;
+}
+
+header h1 {
+  text-align: center;
+  margin: 0 auto .5em;
+}
+
+nav {
+  min-width: 6.2em;
+  text-align: right;
+}
+
+nav a {
+  display: inline-block;
+  width: 2em;
+  height: 2em;
+  background-color: #4182cc;
+}
+
+.previous-week {
+  border: solid 1em white;
+  border-right: solid 1em #4182cc;
+  margin-right: 1em;
+}
+
+.next-week {
+  border: solid 1em white;
+  border-left: solid 1em #4182cc;
+}
+
+.previous-week:hover {
+  border-right: solid 1em #184e90;
+}
+
+.next-week:hover {
+  border-left: solid 1em #184e90;
+}
+
+.next-week[href="/data?weeksAgo=-1"] {
+  border-left: solid 1em #CCC;
+  pointer-events: none;
+}
+
 section {
   margin: 0 auto 2em;
+}
+
+section:last-child {
+  margin-bottom: 0;
 }
 
 h2 {
@@ -94,9 +159,26 @@ tr.totals td {
   background-color: #b0b7bf;
 }
 
+tr.totals:nth-of-type(2) {
+  display: none;
+}
+
 @media (min-width: 650px) {
   body {
     font-size: 1em;
+  }
+
+  header {
+    flex-direction: row;
+  }
+
+  header h1 {
+    text-align: left;
+    margin: 0;
+  }
+
+  nav a {
+    transform: translateX(50%);
   }
 
   table {
