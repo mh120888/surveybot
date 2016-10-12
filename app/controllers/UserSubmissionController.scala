@@ -62,14 +62,14 @@ class UserSubmissionController @Inject()(submissionRepository: PostgresUserSubmi
     if (userSubmission.isValid()) {
       saveSubmissionAndReturnResponse(userSubmission)
     } else {
-      Ok("There was a problem with your submission.\n\n" + userSubmission.getErrors.mkString("\n\n"))
+      Ok(s"There was a problem with your submission: ${userSubmission.text}\n\n" + userSubmission.getErrors.mkString("\n\n"))
     }
   }
 
   private def saveSubmissionAndReturnResponse(userSubmission: UserSubmission): Result = {
     val id: Option[Long] = submissionRepository.create(userSubmission)
     if (id.isDefined) {
-      Ok("Success!")
+      Ok(s"${userSubmission.text} was successfully submitted!")
     } else {
       Ok("Uh oh! I wasn't able to save that - please try submitting it again.")
     }
