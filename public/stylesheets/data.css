@@ -32,26 +32,25 @@ nav a {
   display: inline-block;
   width: 2em;
   height: 2em;
-  background-color: #4182cc;
 }
 
 .previous-week {
   border: solid 1em white;
-  border-right: solid 1em #4182cc;
+  border-right: solid 1em #474b50;
   margin-right: 1em;
 }
 
 .next-week {
   border: solid 1em white;
-  border-left: solid 1em #4182cc;
+  border-left: solid 1em #474b50;
 }
 
 .previous-week:hover {
-  border-right: solid 1em #184e90;
+  border-right: solid 1em #2b2b2b;
 }
 
 .next-week:hover {
-  border-left: solid 1em #184e90;
+  border-left: solid 1em #2b2b2b;
 }
 
 .next-week[href="/data?weeksAgo=-1"] {
