@@ -1,5 +1,5 @@
 body {
-  background: #f5f5f5;
+  background: #f5f8fa;
 }
 
 main {
@@ -36,21 +36,21 @@ nav a {
 
 .previous-week {
   border: solid 1em white;
-  border-right: solid 1em #474b50;
+  border-right: solid 1em #27a8e0; 
   margin-right: 1em;
 }
 
 .next-week {
   border: solid 1em white;
-  border-left: solid 1em #474b50;
+  border-left: solid 1em #27a8e0;
 }
 
 .previous-week:hover {
-  border-right: solid 1em #2b2b2b;
+  border-right: solid 1em #1f9fd7;
 }
 
 .next-week:hover {
-  border-left: solid 1em #2b2b2b;
+  border-left: solid 1em #1f9fd7;
 }
 
 .next-week[href="/data?weeksAgo=-1"] {
@@ -75,7 +75,7 @@ tbody, tr, td {
 }
 
 th {
-  background: #b0b7bf;
+  background: #b0bfce;
   padding: .5em;
   text-align: left;
 }
@@ -90,14 +90,14 @@ th {
 
 table {
   border: none;
-  border-spacing: 1px;
-  background: #666;
+  border-spacing: 0px 1px;
+  background: white;
   width: 100%;
 }
 
 td {
   padding: .5em;
-  background: #EEE;
+  background: #f5f8fa;
 }
 
 .activity td:before {
@@ -105,12 +105,8 @@ td {
   padding-right: .5em;
 }
 
-.activity td:after {
-  visibility: hidden;
-}
-
 tr:nth-child(odd) td {
-  background: #DEDEDE;
+  background:#e8ecef;
 }
 
 .activity .label {
@@ -120,25 +116,12 @@ tr:nth-child(odd) td {
 }
 
 .overall td:first-child {
-  background: #b0b7bf;
+  background: #b0bfce;
   font-weight: 700;
 }
 
 tr:last-child td {
   position: relative;
-}
-
-tr:last-child td:after {
-  content: '';
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background-color: #4d5258;
-  z-index: 10;
-  transform: translate(0, -50%);
 }
 
 .stats {
@@ -155,7 +138,7 @@ tr:last-child td:after {
 }
 
 tr.totals td {
-  background-color: #b0b7bf;
+  background-color: #b0bfce;
 }
 
 tr.totals:nth-of-type(2) {
@@ -206,10 +189,6 @@ tr.totals:nth-of-type(2) {
 
   .activity td:before {
     display: none;
-  }
-
-  .activity td:after {
-    visibility: visible;
   }
 
   .overall td {
