@@ -3,3 +3,22 @@
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
+
+html {
+  text-align: center;
+}
+
+body {
+  font-family: 'Roboto', Arial, sans-serif;
+  padding: .5em;
+  /*display: inline-block;*/
+  text-align: left;
+  color: #474b50;
+  font-size: 3.9vw;
+}
+
+@media (min-width: 650px) {
+  body {
+    font-size: 1em;
+  }
+}
