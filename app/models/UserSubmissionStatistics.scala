@@ -1,6 +1,6 @@
 package models
 
-case class StatsGenerator(userSubmissions: List[UserSubmission]) {
+case class UserSubmissionStatistics(userSubmissions: List[UserSubmission]) {
 
   def getTotalTime(submissions: List[UserSubmission] = userSubmissions): Int = {
     submissions.map(_.getTotalTime).sum

@@ -19,25 +19,25 @@ class BotTaskModule extends AbstractModule {
 }
 
 class BotTask @Inject() (actorSystem: ActorSystem, lifecycle: ApplicationLifecycle) {
+    val currentTime = new DateTime()
+    val targetTime = currentTime.withHourOfDay(16).withMinuteOfHour(45).withSecondOfMinute(0)
+    val delayInSeconds: Int = Seconds.secondsBetween(currentTime, targetTime).getSeconds
 
-  val currentTime = new DateTime()
-  val targetTime = currentTime.withHourOfDay(16).withMinuteOfHour(45).withSecondOfMinute(0)
-  val delayInSeconds: Int = Seconds.secondsBetween(currentTime, targetTime).getSeconds
+    actorSystem.scheduler.schedule(delayInSeconds.second, 1.day) {
+      if (play.api.Play.isDev(play.api.Play.current)) {
+        val respondentRepository = PostgresSurveyRespondentRepository()
+        val surveyRespondents = respondentRepository.getAll()
+        val messageComposer = BotMessageComposer()
+        val sender = BotMessageSender(WS.client)
 
-  actorSystem.scheduler.schedule(delayInSeconds.second, 1.day) {
-    val respondentRepository = PostgresSurveyRespondentRepository()
-    val surveyRespondents = respondentRepository.getAll()
-    val messageComposer = BotMessageComposer()
-    val sender = BotMessageSender(WS.client)
-
-    for (surveyRespondent <- surveyRespondents) {
-      val message = messageComposer.createMessage(surveyRespondent)
-      sender.sendMessage(message)
+        for (surveyRespondent <- surveyRespondents) {
+          val message = messageComposer.createMessage(surveyRespondent)
+          sender.sendMessage(message)
+        }
+      }
     }
-  }
 
   lifecycle.addStopHook{ () =>
     Future.successful(actorSystem.shutdown())
   }
-
 }

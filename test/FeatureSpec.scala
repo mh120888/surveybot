@@ -143,10 +143,10 @@ class FeatureSpec extends Specification {
     }
 
     "allow a user to navigate to a page that shows the previous week's data" in new WithBrowser {
-      val timeCalculator = TimeCalculator()
+      val dateCalculator = DateCalculator()
       val currentDate = new DateTime().minusWeeks(2)
-      val startDate = timeCalculator.getStartOfWeek(currentDate).toString("MM/d/yyyy")
-      val endDate = timeCalculator.getEndOfWeek(currentDate).toString("MM/d/yyyy")
+      val startDate = dateCalculator.getStartOfWeek(currentDate).toString("MM/d/yyyy")
+      val endDate = dateCalculator.getEndOfWeek(currentDate).toString("MM/d/yyyy")
 
       browser.goTo("/data?weeksAgo=1")
       browser.$("#previous-week").click()
@@ -155,10 +155,10 @@ class FeatureSpec extends Specification {
     }
 
     "allow a user to navigate to a page that shows the next week's data" in new WithBrowser {
-      val timeCalculator = TimeCalculator()
+      val dateCalculator = DateCalculator()
       val currentDate = new DateTime()
-      val startDate = timeCalculator.getStartOfWeek(currentDate).toString("MM/d/yyyy")
-      val endDate = timeCalculator.getEndOfWeek(currentDate).toString("MM/d/yyyy")
+      val startDate = dateCalculator.getStartOfWeek(currentDate).toString("MM/d/yyyy")
+      val endDate = dateCalculator.getEndOfWeek(currentDate).toString("MM/d/yyyy")
 
       browser.goTo("/data?weeksAgo=1")
       browser.$("#next-week").click()

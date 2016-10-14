@@ -2,7 +2,7 @@ package models
 
 import org.joda.time.DateTime
 
-case class TimeCalculator() {
+case class DateCalculator() {
   private val END_OF_WEEK = 6
 
   def getStartOfWeek(day: DateTime): DateTime = {
