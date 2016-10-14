@@ -1,12 +1,14 @@
 package models
 
-import org.specs2.mutable.Specification
-import play.api.test.WithApplication
-import play.api.db._
-import play.api.Play.current
 import anorm._
+import org.specs2.mutable.Specification
+import play.api.Play.current
+import play.api.db._
+import play.api.test.WithApplication
 
 class PostgresSurveyRespondentRepositorySpec extends Specification {
+  val repo = PostgresSurveyRespondentRepository()
+  val surveyRespondent = SurveyRespondent(username = "malina")
 
   def deleteAll(): Boolean = {
     DB.withConnection { implicit c =>
@@ -16,17 +18,15 @@ class PostgresSurveyRespondentRepositorySpec extends Specification {
 
   "PostgresSurveyRespondentRepository" should {
     "#create returns Some[Long] and surveyRespondent exists in database when given valid surveyRespondent" in new WithApplication {
-      val repo = PostgresSurveyRespondentRepository()
       deleteAll()
-      val result: Option[Long] = repo.create(SurveyRespondent(username = "malina"))
+      val result: Option[Long] = repo.create(surveyRespondent)
 
       result.isDefined must equalTo(true)
     }
 
     "#getAll returns one SurveyRespondent when there is only one SurveyRespondent in the db" in new WithApplication {
-      val repo = PostgresSurveyRespondentRepository()
       deleteAll()
-      repo.create(SurveyRespondent(username = "malina"))
+      repo.create(surveyRespondent)
 
       val results = repo.getAll()
 
@@ -34,8 +34,7 @@ class PostgresSurveyRespondentRepositorySpec extends Specification {
     }
 
     "#findById returns one SurveyRespondent given a SurveyRespondent's ID" in new WithApplication {
-      val repo = PostgresSurveyRespondentRepository()
-      val id = repo.create(SurveyRespondent(username = "malina")).get
+      val id = repo.create(surveyRespondent).get
 
       val result = repo.findById(id)
 
@@ -44,9 +43,8 @@ class PostgresSurveyRespondentRepositorySpec extends Specification {
     }
 
     "#deleteById removes a single record in the db given a SurveyRespondent's ID" in new WithApplication {
-      val repo = PostgresSurveyRespondentRepository()
       deleteAll()
-      val id = repo.create(SurveyRespondent(username = "matt")).get
+      val id = repo.create(surveyRespondent).get
 
       repo.deleteById(id)
 
