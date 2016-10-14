@@ -10,7 +10,7 @@ case class SlackPostData (token: String,
                           username: String)
 
 object SlackPostData {
-  val SLACK_TOKEN = Play.current.configuration.getString("slack.integration").get
+  val SURVEY_SLASH_COMMAND_TOKEN = Play.current.configuration.getString("slack.surveySlashCommandToken").get
   var testSlackToken = ""
 
   def setTestSlackToken(token: String) {
@@ -18,7 +18,7 @@ object SlackPostData {
   }
 
   private def getSlackToken: String = {
-    if (play.Play.isTest) testSlackToken else SLACK_TOKEN
+    if (play.Play.isTest) testSlackToken else SURVEY_SLASH_COMMAND_TOKEN
   }
 
   def correctToken: Reads[String] =

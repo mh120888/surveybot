@@ -3,11 +3,24 @@ package controllers
 import com.google.inject.Inject
 import models._
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.libs.ws.WS
 import play.api.mvc._
-
+import play.api.Play.current
 
 class SurveyRespondentController @Inject()(respondentRepository: PostgresSurveyRespondentRepository = PostgresSurveyRespondentRepository(),
                                            val messagesApi: MessagesApi) extends Controller with I18nSupport {
+
+  def testMessage = Action { implicit request =>
+    val surveyRespondents = respondentRepository.getAll()
+    val sender = BotMessageSender(WS.client)
+
+    for (surveyRespondent <- surveyRespondents) {
+      val message = BotMessage(surveyRespondent.username, "Hullo")
+      sender.sendMessage(message)
+    }
+
+    Ok
+  }
 
   def dashboard = Action { implicit request =>
     Ok(views.html.dashboard("Dashboard")(respondentRepository.getAll()))

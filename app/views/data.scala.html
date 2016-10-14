@@ -1,4 +1,4 @@
-@(title: String)(weeksAgo: Int)(stories: List[UserSubmission])(bugs: List[UserSubmission])(meetings: List[UserSubmission])(statsGenerator: StatsGenerator)
+@(title: String)(weeksAgo: Int)(stories: List[UserSubmission])(bugs: List[UserSubmission])(meetings: List[UserSubmission])(statistics: UserSubmissionStatistics)
 
 <!DOCTYPE html>
 
@@ -42,8 +42,8 @@
       }
       <tr class='totals'>
         <td colspan='3' class='label'>Averages</td>
-        <td data-label='Average Total Time:'>@statsGenerator.getAverageTotalTime(stories) hours</td>
-        <td data-label='Average Time to Understand Code:'>@statsGenerator.getAverageTimeUnderstandingCode(stories)%</td>
+        <td data-label='Average Total Time:'>@statistics.getAverageTotalTime(stories) hours</td>
+        <td data-label='Average Time to Understand Code:'>@statistics.getAverageTimeUnderstandingCode(stories)%</td>
       </tr>
     </table>
   </section>
@@ -68,8 +68,8 @@
     }
     <tr class='totals'>
       <td colspan='3' class='label'>Averages</td>
-      <td data-label='Average Total Time:'>@statsGenerator.getAverageTotalTime(bugs) hours</td>
-      <td data-label='Average Time to Understand Code:'>@statsGenerator.getAverageTimeUnderstandingCode(bugs)%</td>
+      <td data-label='Average Total Time:'>@statistics.getAverageTotalTime(bugs) hours</td>
+      <td data-label='Average Time to Understand Code:'>@statistics.getAverageTimeUnderstandingCode(bugs)%</td>
     </tr>
   </table>
 </section>
@@ -90,7 +90,7 @@
   }
   <tr class='totals'>
     <td colspan='2' class='label'>Averages</td>
-    <td data-label='Average Total Time:'>@statsGenerator.getAverageTotalTime(meetings) hours</td>
+    <td data-label='Average Total Time:'>@statistics.getAverageTotalTime(meetings) hours</td>
   </tr>
 </table>
 </section>
@@ -104,23 +104,23 @@
     </tr>
     <tr>
       <td>Story</td>
-      <td>@statsGenerator.getTotalTime(stories)</td>
-      <td>@statsGenerator.showPercentage(stories)</td>
+      <td>@statistics.getTotalTime(stories)</td>
+      <td>@statistics.showPercentage(stories)</td>
     </tr>
     <tr>
       <td>Bug</td>
-      <td>@statsGenerator.getTotalTime(bugs)</td>
-      <td>@statsGenerator.showPercentage(bugs)</td>
+      <td>@statistics.getTotalTime(bugs)</td>
+      <td>@statistics.showPercentage(bugs)</td>
     </tr>
     <tr>
       <td>Meeting</td>
-      <td>@statsGenerator.getTotalTime(meetings)</td>
-      <td>@statsGenerator.showPercentage(meetings)</td>
+      <td>@statistics.getTotalTime(meetings)</td>
+      <td>@statistics.showPercentage(meetings)</td>
     </tr>
     <tr class='totals'>
       <td>Total</td>
-      <td>@statsGenerator.getTotalTime()</td>
-      <td>@statsGenerator.getTotalPercentage%</td>
+      <td>@statistics.getTotalTime()</td>
+      <td>@statistics.getTotalPercentage%</td>
     </tr>
   </table>
 </section>
