@@ -6,7 +6,7 @@ import scala.concurrent.Future
 
 case class BotMessageSender(ws: WSClient) {
   private val USERNAME = "surveybot"
-  private val TOKEN = Play.current.configuration.getString("slack.token").get
+  private val TOKEN = Play.current.configuration.getString("slack.botUserToken").get
   private val SLACK_API_URL = "https://slack.com/api/chat.postMessage"
 
   def sendMessage(botMessage: BotMessage): Future[WSResponse] = {

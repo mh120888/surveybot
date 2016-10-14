@@ -18,7 +18,7 @@ class BotMessageSenderSpec extends Specification {
       result.url must equalTo("https://slack.com/api/chat.postMessage")
       result.queryString.getOrElse("username", List("")).head must equalTo("surveybot")
       result.queryString.getOrElse("channel", List("")).head must equalTo("@malina")
-      result.queryString.getOrElse("token", List("")).head must equalTo(Play.current.configuration.getString("slack.token").get)
+      result.queryString.getOrElse("token", List("")).head must equalTo(Play.current.configuration.getString("slack.botUserToken").get)
       result.queryString.getOrElse("text", List("")).head must equalTo("Hi there")
     }
   }

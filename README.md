@@ -15,6 +15,12 @@ Requires Java 1.8, Scala 2.11.8, and SBT
 - `sbt` to enter interactive mode
     - `run` to run server
 
+## Slack API Tokens
+In order for the application to work with Slack, you must first have a Slack team, then you must set up a `slash command` through Slack's admin interface - see [this](https://api.slack.com/slash-commands) for more information.
+- There are currently two API tokens that need to be set as environment variables.
+    - `SURVEY_SLASH_COMMAND_TOKEN` is used by this application to validate that a request came from Slack. Its value can be found on the Configuration page for the `/survey` slash command.
+    - `BOT_USER_TOKEN` is used by Slack to authenticate an API request from this application. Its value can be found by setting up the `Slack API Tester` for your Slack team.
+
 ## Data Storage
 The preferred way to run the application locally is to use Play's H2 in-memory database for data storage. To do so, two environment variables must first be set:
 - `export DATABASE_URL='jdbc:h2:mem:play;MODE=PostgreSQL;DB_CLOSE_DELAY=-1'`
